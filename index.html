@@ -486,7 +486,7 @@
     <div class="tg-header">
       <div class="tg-check-icon">✓</div>
       <h4>¡Entradas Confirmadas!</h4>
-      <p>Guarda los seriales y tokens. Los necesitarán para ingresar al evento.</p>
+      <span>⚠️</span> <h3>Guarda los seriales y tokens. Los necesitarán para ingresar al evento.</h3>
     </div>
 
     <!-- Ticket persona 1 -->
@@ -525,6 +525,14 @@
             </div>
           </div>
           <p class="tg-qr-label">QR de Acceso</p>
+          <button class="btn-download" id="btnDownload1" onclick="descargarTicketPDF(
+            document.getElementById('tgName').textContent,
+            document.getElementById('tgSerial').textContent,
+            document.getElementById('tgToken').textContent,
+            '', 
+            document.getElementById('tgType').textContent,
+            'PERSONA 1'
+          )">⬇ Descargar mi entrada</button>
         </div>
       </div>
     </div>
@@ -565,6 +573,14 @@
             </div>
           </div>
           <p class="tg-qr-label">QR de Acceso</p>
+          <button class="btn-download" id="btnDownload2" style="display:none" onclick="descargarTicketPDF(
+  document.getElementById('tgName2').textContent,
+  document.getElementById('tgSerial2').textContent,
+  document.getElementById('tgToken2').textContent,
+  '',
+  document.getElementById('tgType2').textContent,
+  'PERSONA 2'
+)">⬇ Descargar mi entrada</button>
         </div>
       </div>
     </div>

@@ -354,7 +354,7 @@ async function processOnlinePayment() {
     } else {
       ticket2.style.display = 'none';
     }
-
+document.getElementById('btnDownload2').style.display = '';
     const warning = document.querySelector('.tg-warning p');
     if (warning) warning.textContent = '⏳ Tu entrada está PENDIENTE de aprobación. Recibirás confirmación pronto. Guarda tu serial y token.';
 
@@ -602,4 +602,112 @@ function selectStaffType(btn) {
   btn.classList.add('active');
   STATE.staffType = btn.dataset.stype;
   document.getElementById('staffTypeDesc').textContent = STAFF_TYPE_DESC[STATE.staffType];
+}function descargarTicketPDF(nombre, serial, token, qrUrl, tipo, persona) {
+  const w = 400, h = 220;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo oscuro
+  ctx.fillStyle = '#0d1526';
+  ctx.fillRect(0, 0, w, h);
+
+  // Borde naranja
+  ctx.strokeStyle = '#ff6a00';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(4, 4, w - 8, h - 8);
+
+  // Línea perforada vertical
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(255,106,0,0.4)';
+  ctx.beginPath();
+  ctx.moveTo(w - 130, 4);
+  ctx.lineTo(w - 130, h - 4);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Semicírculos perforados
+  ctx.fillStyle = '#050810';
+  ctx.beginPath(); ctx.arc(w - 130, 0,   10, 0, Math.PI); ctx.fill();
+  ctx.beginPath(); ctx.arc(w - 130, h,   10, Math.PI, 0); ctx.fill();
+
+  // Título evento
+  ctx.fillStyle = '#ff6a00';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('IMPUGNA FEST 2026', 16, 28);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '9px monospace';
+  ctx.fillText('29 MAYO · SALÓN FABRIL · LA PAZ', 16, 42);
+
+  // Separador
+  ctx.strokeStyle = 'rgba(255,106,0,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(16, 50); ctx.lineTo(w - 140, 50); ctx.stroke();
+
+  // Nombre
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TITULAR', 16, 66);
+  ctx.fillStyle = '#f5ede8';
+  ctx.font = 'bold 12px monospace';
+  ctx.fillText(nombre.toUpperCase().substring(0, 22), 16, 80);
+
+  // Tipo
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TIPO', 16, 100);
+  ctx.fillStyle = '#ff6a00';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText(tipo.toUpperCase(), 16, 114);
+
+  // Serial
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('SERIAL', 16, 134);
+  ctx.fillStyle = '#00dcff';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText(serial, 16, 148);
+
+  // Token
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TOKEN SECRETO', 16, 168);
+  ctx.fillStyle = '#ffd700';
+  ctx.font = 'bold 13px monospace';
+  ctx.fillText(token, 16, 184);
+
+  // Persona label
+  ctx.fillStyle = 'rgba(255,106,0,0.6)';
+  ctx.font = '8px monospace';
+  ctx.fillText(persona, 16, 208);
+
+  // QR
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    ctx.drawImage(img, w - 122, 14, 108, 108);
+
+    // Label QR
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '8px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('QR DE ACCESO', w - 68, 136);
+    ctx.fillText('NO COMPARTIR', w - 68, 147);
+    ctx.textAlign = 'left';
+
+    // Descargar
+    const link = document.createElement('a');
+    link.download = `ticket-${serial}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+  img.onerror = () => {
+    // Si falla el QR, descarga sin él
+    const link = document.createElement('a');
+    link.download = `ticket-${serial}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+  img.src = qrUrl || `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(serial + '|' + token)}`;
 }
