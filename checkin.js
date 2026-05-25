@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZ1FkZLRtFdIsK0eUvJZ_9AdvFoAL-tPWbg24WrBzX6HDXd6u7YClp0u0qzJXC1vW8/exec'; // misma del script.js
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAEMH-dXsmAoJbCpqGoNjzlNtpay4VNk7Y1Q5EBvHxI4wDjNAvjcJBSC4QqZ7vPlk/exec'; // misma del script.js
 const PASS            = 'CEIE-BYTE-2026';
 
 let scanner     = null;

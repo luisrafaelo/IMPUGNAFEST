@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZ1FkZLRtFdIsK0eUvJZ_9AdvFoAL-tPWbg24WrBzX6HDXd6u7YClp0u0qzJXC1vW8/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAEMH-dXsmAoJbCpqGoNjzlNtpay4VNk7Y1Q5EBvHxI4wDjNAvjcJBSC4QqZ7vPlk/exec';
 /* ─── ESTADO GLOBAL ─── */
 const STATE = {
   selectedTicketType: null,
@@ -296,7 +296,7 @@ async function processOnlinePayment() {
     el.style.display = 'none';
     el.insertAdjacentHTML('afterend', `<img src="${qrURL}" style="width:100px;border-radius:8px;" />`);
     });
-    
+
     const warning = document.querySelector('.tg-warning p');
 if (warning) warning.textContent = '⏳ Tu entrada está PENDIENTE de aprobación. Recibirás confirmación pronto. Guarda tu serial y token.';
 

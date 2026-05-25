@@ -32,6 +32,7 @@
           <span class="logo-text">IMPUGNA FEST</span>
         </div>
         <span class="dash-nav-tag">Panel Staff</span>
+        <button class="btn-checkin" onclick="window.open('checkin.html','_blank')">⚡ Check-in</button>
         <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
       </div>
     </nav>
@@ -43,36 +44,32 @@
         <div class="kpi-card">
           <div class="kpi-icon">🎫</div>
           <div class="kpi-data">
-            <span class="kpi-value" data-target="187">0</span>
+            <span class="kpi-value" id="kpi-vendidas">0</span>
             <span class="kpi-label">Entradas Vendidas</span>
           </div>
-          <div class="kpi-trend kpi-trend--up">+12% hoy</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">🎟️</div>
           <div class="kpi-data">
-            <span class="kpi-value" data-target="313">0</span>
+            <span class="kpi-value" id="kpi-disponibles">0</span>
             <span class="kpi-label">Disponibles</span>
           </div>
-          <div class="kpi-trend kpi-trend--neutral">500 total</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">💰</div>
           <div class="kpi-data">
             <span class="kpi-prefix">Bs. </span>
-            <span class="kpi-value" data-target="2480">0</span>
+            <span class="kpi-value" id="kpi-ingresos">0</span>
             <span class="kpi-label">Ingresos Estimados</span>
           </div>
-          <div class="kpi-trend kpi-trend--up">+8% vs ayer</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">✅</div>
           <div class="kpi-data">
-            <span class="kpi-value" data-target="94">0</span>
+            <span class="kpi-value" id="kpi-validacion">0</span>
             <span class="kpi-suffix">%</span>
-            <span class="kpi-label">Tasa de Validación</span>
+            <span class="kpi-label">Tasa de Confirmación</span>
           </div>
-          <div class="kpi-trend kpi-trend--up">Alta</div>
         </div>
       </div>
 
@@ -80,77 +77,38 @@
       <div class="dashboard-mid">
         <div class="dash-card">
           <h3 class="dash-card-title"><span>🏆</span> Top Vendedores</h3>
-          <div class="staff-ranking">
-            <div class="staff-item staff-item--1">
-              <div class="staff-rank">1</div>
-              <div class="staff-info">
-                <span class="staff-name">Carlos Mendoza</span>
-                <span class="staff-code">STAFF-001</span>
-              </div>
-              <div class="staff-sales">
-                <div class="staff-bar-wrap"><div class="staff-bar" style="width:100%"></div></div>
-                <span class="staff-count">58 ventas</span>
-              </div>
-            </div>
-            <div class="staff-item staff-item--2">
-              <div class="staff-rank">2</div>
-              <div class="staff-info">
-                <span class="staff-name">Valentina Ríos</span>
-                <span class="staff-code">STAFF-002</span>
-              </div>
-              <div class="staff-sales">
-                <div class="staff-bar-wrap"><div class="staff-bar" style="width:76%"></div></div>
-                <span class="staff-count">44 ventas</span>
-              </div>
-            </div>
-            <div class="staff-item staff-item--3">
-              <div class="staff-rank">3</div>
-              <div class="staff-info">
-                <span class="staff-name">Diego Paredes</span>
-                <span class="staff-code">STAFF-003</span>
-              </div>
-              <div class="staff-sales">
-                <div class="staff-bar-wrap"><div class="staff-bar" style="width:55%"></div></div>
-                <span class="staff-count">32 ventas</span>
-              </div>
-            </div>
-            <div class="staff-item">
-              <div class="staff-rank">4</div>
-              <div class="staff-info">
-                <span class="staff-name">Ana Quiroga</span>
-                <span class="staff-code">STAFF-004</span>
-              </div>
-              <div class="staff-sales">
-                <div class="staff-bar-wrap"><div class="staff-bar" style="width:36%"></div></div>
-                <span class="staff-count">21 ventas</span>
-              </div>
-            </div>
-          </div>
+          <div class="staff-ranking" id="staffRanking"></div>
         </div>
 
         <div class="dash-card">
           <h3 class="dash-card-title"><span>📊</span> Distribución</h3>
           <div class="dist-chart">
-            <div class="dist-item">
+            <div class="dist-item" id="dist-preventa">
               <div class="dist-bar-wrap">
-                <div class="dist-bar dist-bar--preventa" style="height:70%"><span class="dist-count">98</span></div>
+                <div class="dist-bar dist-bar--preventa" style="height:0%">
+                  <span class="dist-count">0</span>
+                </div>
               </div>
               <span class="dist-label">Preventa</span>
-              <span class="dist-pct">52%</span>
+              <span class="dist-pct">0%</span>
             </div>
-            <div class="dist-item">
+            <div class="dist-item" id="dist-general">
               <div class="dist-bar-wrap">
-                <div class="dist-bar dist-bar--general" style="height:46%"><span class="dist-count">62</span></div>
+                <div class="dist-bar dist-bar--general" style="height:0%">
+                  <span class="dist-count">0</span>
+                </div>
               </div>
               <span class="dist-label">General</span>
-              <span class="dist-pct">33%</span>
+              <span class="dist-pct">0%</span>
             </div>
-            <div class="dist-item">
+            <div class="dist-item" id="dist-vip">
               <div class="dist-bar-wrap">
-                <div class="dist-bar dist-bar--vip" style="height:20%"><span class="dist-count">27</span></div>
+                <div class="dist-bar dist-bar--vip" style="height:0%">
+                  <span class="dist-count">0</span>
+                </div>
               </div>
               <span class="dist-label">VIP</span>
-              <span class="dist-pct">14%</span>
+              <span class="dist-pct">0%</span>
             </div>
           </div>
         </div>
@@ -160,69 +118,51 @@
       <div class="dash-card dash-card--table">
         <div class="table-header">
           <h3 class="dash-card-title"><span>📋</span> Registros Recientes</h3>
-          <div class="table-filters">
-            <select class="table-filter-select">
-              <option>Todos</option>
-              <option>Preventa</option>
-              <option>General</option>
-              <option>VIP</option>
-            </select>
-            <input type="search" class="table-search" placeholder="Buscar..." />
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="btn-nuevo-registro" onclick="abrirModalStaff()">+ Registrar Entrada</button>
+            <div class="table-filters">
+              <select class="table-filter-select">
+                <option>Todos</option>
+                <option>Preventa</option>
+                <option>General</option>
+                <option>VIP</option>
+              </select>
+              <input type="search" class="table-search" placeholder="Buscar..." />
+            </div>
           </div>
         </div>
         <div class="table-wrap">
           <table class="records-table">
             <thead>
               <tr>
-                <th>Serial</th><th>Nombre</th><th>Tipo</th><th>Staff</th><th>Estado</th><th>Fecha</th><th>Acción</th>  </tr>
+                <th>Serial</th><th>Nombre</th><th>Tipo</th><th>Staff</th><th>Estado</th><th>Fecha</th><th>Acción</th>
+              </tr>
             </thead>
-            <tbody id="recordsTableBody">
-              <tr>
-                <td><code>NX-2025-A8F21</code></td>
-                <td>María López</td>
-                <td><span class="badge-type badge-preventa">Preventa</span></td>
-                <td>STAFF-001</td>
-                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
-                <td>12 Jul 2025</td>
-              </tr>
-              <tr>
-                <td><code>NX-2025-B3K77</code></td>
-                <td>Juan Flores</td>
-                <td><span class="badge-type badge-general">General</span></td>
-                <td>STAFF-002</td>
-                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
-                <td>11 Jul 2025</td>
-              </tr>
-              <tr>
-                <td><code>NX-2025-C9P04</code></td>
-                <td>Laura Mamani</td>
-                <td><span class="badge-type badge-vip">VIP</span></td>
-                <td>—</td>
-                <td><span class="badge-status badge-pending">Pendiente</span></td>
-                <td>11 Jul 2025</td>
-              </tr>
-              <tr>
-                <td><code>NX-2025-D1R55</code></td>
-                <td>Pedro Quispe</td>
-                <td><span class="badge-type badge-preventa">Preventa</span></td>
-                <td>STAFF-003</td>
-                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
-                <td>10 Jul 2025</td>
-              </tr>
-              <tr>
-                <td><code>NX-2025-E6T89</code></td>
-                <td>Sofía Castro</td>
-                <td><span class="badge-type badge-general">General</span></td>
-                <td>STAFF-001</td>
-                <td><span class="badge-status badge-invalid">Inválido</span></td>
-                <td>10 Jul 2025</td>
-              </tr>
-            </tbody>
+            <tbody id="recordsTableBody"></tbody>
           </table>
         </div>
       </div>
 
     </main>
+  </div>
+
+  <!-- MODAL REGISTRAR ENTRADA -->
+  <div id="modalStaff" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#150f18;border:1px solid rgba(255,106,0,0.2);border-radius:20px;padding:32px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(20px);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;letter-spacing:0.08em;color:var(--c-accent)">REGISTRAR ENTRADA</h3>
+        <button onclick="cerrarModalStaff()" style="background:none;border:none;color:var(--c-text-2);font-size:1.4rem;cursor:pointer;">×</button>
+      </div>
+      <form id="formStaffDash" onsubmit="registrarStaffDash(event)" style="display:flex;flex-direction:column;gap:12px;">
+        <input type="text" id="sdSerial"   placeholder="Serial (NX-2026-XXXXXXXX)"  required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <input type="text" id="sdToken"    placeholder="Token (8 caracteres)"        required maxlength="8" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <input type="text" id="sdNombre"   placeholder="Nombre del asistente"        required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <input type="tel"  id="sdTelefono" placeholder="Teléfono"                    required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <input type="text" id="sdStaff"    placeholder="Código vendedor (STAFF-JAN)" required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <button type="submit" style="background:linear-gradient(135deg,#ff6a00,#ff3c00);border:none;color:#fff;font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;padding:13px;border-radius:8px;cursor:pointer;text-transform:uppercase;">Validar y Registrar</button>
+      </form>
+      <div id="staffDashResult" style="display:none;padding:12px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;"></div>
+    </div>
   </div>
 
   <script src="dashboard.js"></script>

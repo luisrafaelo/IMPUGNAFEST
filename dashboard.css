@@ -366,3 +366,44 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
 }
 .btn-aprobar:hover { opacity: 0.85; transform: translateY(-1px); }
 .btn-aprobar:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-nuevo-registro {
+  background: linear-gradient(135deg, var(--c-accent), #ff3c00);
+  border: none;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn-nuevo-registro:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.staffdash-result {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.staffdash-result.success { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); color: #00ff88; }
+.staffdash-result.error   { background: rgba(255,45,120,0.08); border: 1px solid rgba(255,45,120,0.3); color: #ff2d78; }
+.staffdash-result.warning { background: rgba(255,165,0,0.08);  border: 1px solid rgba(255,165,0,0.3);  color: #ffa500; }
+.btn-checkin {
+  background: linear-gradient(135deg, var(--c-green), #00aa55);
+  border: none;
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+.btn-checkin:hover { opacity: 0.85; transform: translateY(-1px); }

@@ -1,20 +1,38 @@
 'use strict';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZ1FkZLRtFdIsK0eUvJZ_9AdvFoAL-tPWbg24WrBzX6HDXd6u7YClp0u0qzJXC1vW8/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAEMH-dXsmAoJbCpqGoNjzlNtpay4VNk7Y1Q5EBvHxI4wDjNAvjcJBSC4QqZ7vPlk/exec';
 const PASS = 'CEIE-BYTE-2026';
+const TOTAL_ENTRADAS = 750;
 
+const STAFF_NOMBRES = {
+  'STAFF-JAN': 'Jandrito',
+  'STAFF-CRI': 'Cristian',
+  'STAFF-NAT': 'Natalia',
+  'STAFF-MAR': 'Mariela',
+  'STAFF-CAR': 'Carlos',
+  'STAFF-FLA': 'Flavia',
+  'STAFF-BLE': 'Bleymar',
+  'STAFF-MIC': 'Micaela',
+  'STAFF-MRV': 'Marvin',
+  'STAFF-ABE': 'Abel',
+  'STAFF-PAU': 'Paul',
+  'STAFF-JAZ': 'Jazmín',
+  'STAFF-ITA': 'Itamar',
+  'STAFF-CRL': 'Carla',
+  'STAFF-CRT': 'Cortesías',
+  'STAFF-RAF': 'Rafael',
+  'ONLINE':    'Online',
+};
+
+/* ── LOGIN ── */
 function checkLogin() {
   const val = document.getElementById('pinInput').value;
   const err = document.getElementById('loginError');
-
   if (val === PASS) {
     sessionStorage.setItem('dash_auth', '1');
-    document.getElementById('loginScreen').style.display    = 'none';
-    document.getElementById('dashboardScreen').style.display = 'block';
-    animateKPIs();
-    initTable();
+    mostrarDashboard();
   } else {
     err.style.display = 'block';
-    setTimeout(() => { err.style.display = 'none'; }, 3000);
+    setTimeout(() => err.style.display = 'none', 3000);
   }
 }
 
@@ -25,72 +43,52 @@ function logout() {
   document.getElementById('pinInput').value = '';
 }
 
-/* Enter key en el input */
+function mostrarDashboard() {
+  document.getElementById('loginScreen').style.display     = 'none';
+  document.getElementById('dashboardScreen').style.display = 'block';
+  cargarTodo();
+}
+
 document.getElementById('pinInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkLogin();
 });
 
-/* Persistir sesión en la misma pestaña */
-if (sessionStorage.getItem('dash_auth') === '1') {
-  document.getElementById('loginScreen').style.display    = 'none';
-  document.getElementById('dashboardScreen').style.display = 'block';
-  animateKPIs();
-  initTable();
-}
+if (sessionStorage.getItem('dash_auth') === '1') mostrarDashboard();
 
-function animateKPIs() {
-  document.querySelectorAll('.kpi-value[data-target]').forEach(el => {
-    const target = parseInt(el.dataset.target);
-    const start  = performance.now();
-    const dur    = 1400;
-    function step(now) {
-      const p = Math.min((now - start) / dur, 1);
-      const e = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(e * target).toLocaleString();
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  });
-}
-
-function initTable() {
-  cargarRegistros();
-
-  document.querySelector('.table-search').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll('#recordsTableBody tr').forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
+/* ── CARGA ÚNICA ── */
+function cargarTodo() {
+  ['kpi-vendidas','kpi-disponibles','kpi-ingresos','kpi-validacion'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
   });
 
-  document.querySelector('.table-filter-select').addEventListener('change', e => {
-    const val = e.target.value.toLowerCase();
-    document.querySelectorAll('#recordsTableBody tr').forEach(row => {
-      if (val === 'todos') { row.style.display = ''; return; }
-      const badge = row.querySelector('.badge-type');
-      row.style.display = badge && badge.textContent.toLowerCase().includes(val) ? '' : 'none';
-    });
-  });
-}
-
-function cargarRegistros() {
   const tbody = document.getElementById('recordsTableBody');
   tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--c-text-3)">Cargando...</td></tr>';
 
-  fetch(APPS_SCRIPT_URL + '?action=getRegistros')
+  fetch(APPS_SCRIPT_URL + '?action=getTodo')
   .then(r => r.json())
-  .then(data => {
-    if (!data.ok || !data.rows.length) {
+  .then(d => {
+    if (!d.ok) return;
+
+    animarNumero('kpi-vendidas',    d.vendidas);
+    animarNumero('kpi-disponibles', TOTAL_ENTRADAS - d.vendidas);
+    animarNumero('kpi-ingresos',    d.ingresos);
+    animarNumero('kpi-validacion',  d.tasaValidacion);
+    renderStaff(d.staff);
+    renderDist(d.dist);
+
+    if (!d.rows.length) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--c-text-3)">Sin registros</td></tr>';
       return;
     }
-    tbody.innerHTML = data.rows.map(r => {
-      const isPending = r.estado === 'PENDIENTE';
+
+    tbody.innerHTML = d.rows.map(r => {
+      const isPending  = r.estado === 'PENDIENTE';
       const badgeClass = isPending ? 'badge-pending' : 'badge-confirmed';
       const badgeText  = isPending ? 'Pendiente' : 'Confirmado';
       const tipoClass  = r.tipo === 'Preventa' ? 'badge-preventa' : r.tipo === 'VIP' ? 'badge-vip' : 'badge-general';
       const accionBtn  = isPending
-        ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}', this)">Aprobar</button>`
+        ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}','${r.telefono}','${r.nombre}','${r.tipo}',this)">Aprobar</button>`
         : '—';
       return `<tr>
         <td><code>${r.serial}</code></td>
@@ -102,45 +100,117 @@ function cargarRegistros() {
         <td>${accionBtn}</td>
       </tr>`;
     }).join('');
+
+    initFiltros();
   })
   .catch(() => {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--c-magenta)">Error al cargar</td></tr>';
   });
 }
-function aprobarEntrada(serial, btn) {
-  if (!confirm(`¿Aprobar entrada ${serial}?`)) return;
 
+function initFiltros() {
+  const search = document.querySelector('.table-search');
+  const filter = document.querySelector('.table-filter-select');
+
+  if (search) search.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('#recordsTableBody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+
+  if (filter) filter.addEventListener('change', e => {
+    const val = e.target.value.toLowerCase();
+    document.querySelectorAll('#recordsTableBody tr').forEach(row => {
+      if (val === 'todos') { row.style.display = ''; return; }
+      const badge = row.querySelector('.badge-type');
+      row.style.display = badge && badge.textContent.toLowerCase().includes(val) ? '' : 'none';
+    });
+  });
+}
+
+/* ── KPIs ── */
+function animarNumero(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const dur = 1400, start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function renderStaff(staff) {
+  const el = document.getElementById('staffRanking');
+  if (!el || !staff?.length) { if(el) el.innerHTML = '<p style="color:var(--c-text-3);font-size:0.8rem;padding:8px">Sin ventas registradas aún</p>'; return; }
+  const max = staff[0].ventas || 1;
+  const medals = ['staff-item--1','staff-item--2','staff-item--3'];
+  el.innerHTML = staff.map((s, i) => `
+    <div class="staff-item ${medals[i] || ''}">
+      <div class="staff-rank">${i + 1}</div>
+      <div class="staff-info">
+        <span class="staff-name">${STAFF_NOMBRES[s.code] || s.code}</span>
+        <span class="staff-code">${s.code}</span>
+      </div>
+      <div class="staff-sales">
+        <div class="staff-bar-wrap">
+          <div class="staff-bar" style="width:${Math.round(s.ventas/max*100)}%"></div>
+        </div>
+        <span class="staff-count">${s.ventas} ventas</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderDist(dist) {
+  if (!dist) return;
+  const total = dist.preventa + dist.general + dist.vip || 1;
+  const max   = Math.max(dist.preventa, dist.general, dist.vip, 1);
+  [
+    { id: 'dist-preventa', count: dist.preventa },
+    { id: 'dist-general',  count: dist.general  },
+    { id: 'dist-vip',      count: dist.vip       },
+  ].forEach(item => {
+    const wrap = document.getElementById(item.id);
+    if (!wrap) return;
+    wrap.querySelector('.dist-bar').style.height  = Math.round(item.count / max * 100) + '%';
+    wrap.querySelector('.dist-count').textContent = item.count;
+    wrap.querySelector('.dist-pct').textContent   = Math.round(item.count / total * 100) + '%';
+  });
+}
+
+/* ── APROBAR ── */
+function aprobarEntrada(serial, telefono, nombre, tipo, btn) {
+  if (!confirm(`¿Aprobar entrada ${serial}?`)) return;
   btn.disabled = true;
   btn.textContent = '...';
 
   fetch(APPS_SCRIPT_URL, {
-    method:  'POST',
+    method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({ action: 'aprobarEntrada', serial })
   })
   .then(r => r.json())
   .then(data => {
     if (data.ok) {
-      btn.closest('tr').querySelector('.badge-status').className = 'badge-status badge-confirmed';
-      btn.closest('tr').querySelector('.badge-status').textContent = 'Confirmado';
-      // Reemplaza btn.remove() por esto:
-btn.remove();
+      const tr = btn.closest('tr');
+      tr.querySelector('.badge-status').className   = 'badge-status badge-confirmed';
+      tr.querySelector('.badge-status').textContent = 'Confirmado';
+      tr.cells[6].innerHTML = '—';
 
-// Abrir WhatsApp con mensaje pregenerado
-const rowData = btn.closest('tr');
-const nombre  = rowData.cells[1].textContent;
-const serial  = rowData.cells[0].querySelector('code').textContent;
-const tipo    = rowData.cells[2].textContent.trim();
-const tel     = prompt(`📱 Teléfono del comprador (con código país, ej: 59170012345):`);
-
-if (tel) {
-  const msg = encodeURIComponent(
-    `✅ *IMPUGNA FEST 2026*\n\nHola ${nombre}, tu entrada ha sido *CONFIRMADA* 🎉\n\n` +
-    `🎫 Tipo: ${tipo}\n🔑 Serial: ${serial}\n\n` +
-    `Guarda este mensaje. Lo necesitarás para ingresar al evento.\n📍 Centro Fabril · 29 Mayo · 4:00 PM`
-  );
-  window.open(`https://wa.me/${tel}?text=${msg}`, '_blank');
-}
+      const tel = prompt('📱 Teléfono (ej: 70012345):');
+      if (tel) {
+        const msg =
+          `✅ *IMPUGNA FEST 2026*\n\n` +
+          `Hola ${nombre}, tu entrada ha sido *CONFIRMADA* 🎉\n\n` +
+          `🎫 Tipo: ${tipo}\n🔑 Serial: ${serial}\n\n` +
+          `Guarda este mensaje. Lo necesitarás para ingresar.\n` +
+          `📍 Centro Fabril · 29 Mayo · 4:00 PM`;
+        window.open(`https://wa.me/591${tel}?text=${encodeURIComponent(msg)}`, '_blank');
+        navigator.clipboard.writeText(msg).catch(() => {});
+      }
+      cargarTodo();
     } else {
       alert(data.msg);
       btn.disabled = false;
@@ -152,4 +222,43 @@ if (tel) {
     btn.disabled = false;
     btn.textContent = 'Aprobar';
   });
+}
+
+/* ── MODAL STAFF ── */
+function abrirModalStaff() {
+  document.getElementById('modalStaff').style.display = 'flex';
+}
+
+function cerrarModalStaff() {
+  document.getElementById('modalStaff').style.display = 'none';
+  document.getElementById('formStaffDash').reset();
+  document.getElementById('staffDashResult').style.display = 'none';
+}
+
+async function registrarStaffDash(e) {
+  e.preventDefault();
+  const serial    = document.getElementById('sdSerial').value.trim().toUpperCase();
+  const token     = document.getElementById('sdToken').value.trim().toUpperCase();
+  const nombre    = document.getElementById('sdNombre').value.trim();
+  const telefono  = document.getElementById('sdTelefono').value.trim();
+  const staffCode = document.getElementById('sdStaff').value.trim().toUpperCase();
+  const res       = document.getElementById('staffDashResult');
+  res.style.display = 'none';
+
+  try {
+    const r    = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'validarStaff', nombre, telefono, serial, token, staffCode, comprobanteB64: '', fileName: 'dash-manual' })
+    });
+    const data = await r.json();
+    res.style.display = 'flex';
+    res.className     = `staffdash-result ${data.ok ? 'success' : data.code === 'PENDING' ? 'warning' : 'error'}`;
+    res.textContent   = data.msg;
+    if (data.ok) { cargarTodo(); setTimeout(cerrarModalStaff, 2000); }
+  } catch {
+    res.style.display = 'flex';
+    res.className     = 'staffdash-result error';
+    res.textContent   = '❌ Error de conexión.';
+  }
 }
