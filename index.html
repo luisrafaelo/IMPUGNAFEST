@@ -293,11 +293,6 @@
             </div>
           </div>
 
-          <div class="info-box">
-            <span class="info-icon">ℹ️</span>
-            <p>El <strong>Serial</strong> viene impreso en tu entrada física. El <strong>Token Secreto</strong>Te propocionará el Staff. <strong>Ambos son obligatorios</strong> para verificar la autenticidad.</p>
-          </div>
-
           <form class="reg-form" id="formStaff" onsubmit="submitStaffForm(event)">
             <div class="form-row">
               <div class="form-group">
@@ -310,28 +305,19 @@
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="staffSerial">
-                  Serial de Entrada <span class="req">*</span>
-                  <span class="label-hint">Impreso en la entrada</span>
-                </label>
-                <input type="text" id="staffSerial" placeholder="Ej: 123XXXXX" required autocomplete="off" />
-              </div>
-              <div class="form-group">
-                <label for="staffToken">
-                  Token Secreto <span class="req">*</span>
-                  <span class="label-hint">Código oculto en la entrada</span>
-                </label>
-                <input type="text" id="staffToken" placeholder="Token de 8 caracteres" required autocomplete="off" maxlength="8" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
-                <input type="text" id="staffCode" placeholder="Ej: STAFF-NAT" required autocomplete="off" />
-              </div>
+<div class="form-row">
+  <div class="form-group">
+    <label for="staffSerial">
+      Serial de Entrada <span class="req">*</span>
+      <span class="label-hint">Impreso en la entrada</span>
+    </label>
+    <input type="text" id="staffSerial" placeholder="Ej: NX-2026-XXXXX" required autocomplete="off" />
+  </div>
+  <div class="form-group">
+    <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
+    <input type="text" id="staffCode" placeholder="Ej: STAFF-JAN" required autocomplete="off" />
+  </div>
+</div>
               <div class="form-group">
                 <label>Comprobante de Pago <span class="req">*</span></label>
                 <div class="file-upload" id="staffFileUpload" onclick="document.getElementById('staffFile').click()">

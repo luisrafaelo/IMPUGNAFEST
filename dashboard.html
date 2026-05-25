@@ -101,6 +101,15 @@
               <span class="dist-label">General</span>
               <span class="dist-pct">0%</span>
             </div>
+            <div class="dist-item" id="dist-preferencial">
+              <div class="dist-bar-wrap">
+                <div class="dist-bar dist-bar--preferencial" style="height:0%">
+                  <span class="dist-count">0</span>
+                </div>
+              </div>
+              <span class="dist-label">Preferencial</span>
+              <span class="dist-pct">0%</span>
+            </div>
             <div class="dist-item" id="dist-vip">
               <div class="dist-bar-wrap">
                 <div class="dist-bar dist-bar--vip" style="height:0%">
@@ -119,12 +128,14 @@
         <div class="table-header">
           <h3 class="dash-card-title"><span>📋</span> Registros Recientes</h3>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="btn-nuevo-registro btn-vip-reg" onclick="abrirModalInvitado()">👑 VIP / Preferencial</button>
             <button class="btn-nuevo-registro" onclick="abrirModalStaff()">+ Registrar Entrada</button>
             <div class="table-filters">
               <select class="table-filter-select">
                 <option>Todos</option>
                 <option>Preventa</option>
                 <option>General</option>
+                <option>Preferencial</option>
                 <option>VIP</option>
               </select>
               <input type="search" class="table-search" placeholder="Buscar..." />
@@ -154,8 +165,7 @@
         <button onclick="cerrarModalStaff()" style="background:none;border:none;color:var(--c-text-2);font-size:1.4rem;cursor:pointer;">×</button>
       </div>
       <form id="formStaffDash" onsubmit="registrarStaffDash(event)" style="display:flex;flex-direction:column;gap:12px;">
-        <input type="text" id="sdSerial"   placeholder="Serial (NX-2026-XXXXXXXX)"  required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
-        <input type="text" id="sdToken"    placeholder="Token (8 caracteres)"        required maxlength="8" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+        <input type="text" id="sdSerial"   placeholder="Serial (123XXXXXXXX)"  required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
         <input type="text" id="sdNombre"   placeholder="Nombre del asistente"        required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
         <input type="tel"  id="sdTelefono" placeholder="Teléfono"                    required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
         <input type="text" id="sdStaff"    placeholder="Código vendedor (STAFF-JAN)" required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,106,0,0.15);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
@@ -164,6 +174,33 @@
       <div id="staffDashResult" style="display:none;padding:12px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;"></div>
     </div>
   </div>
+
+  <div id="modalInvitado" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#150f18;border:1px solid rgba(168,85,247,0.25);border-radius:20px;padding:32px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(20px);">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;letter-spacing:0.08em;color:#a855f7">👑 REGISTRAR INVITADO</h3>
+      <button onclick="cerrarModalInvitado()" style="background:none;border:none;color:#a08878;font-size:1.4rem;cursor:pointer;">×</button>
+    </div>
+
+    <!-- Selector tipo -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="inv-tipo-opt active" id="inv-opt-vip" onclick="selectInvTipo('vip')">
+        <span>👑</span><span>VIP</span>
+      </div>
+      <div class="inv-tipo-opt" id="inv-opt-preferencial" onclick="selectInvTipo('preferencial')">
+        <span>🔮</span><span>Preferencial</span>
+      </div>
+    </div>
+
+    <form id="formInvitado" onsubmit="registrarInvitado(event)" style="display:flex;flex-direction:column;gap:12px;">
+      <input type="text" id="invNombre"     placeholder="Nombre completo"        required style="background:rgba(255,255,255,0.04);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+      <input type="tel"  id="invTelefono"   placeholder="Teléfono"               required style="background:rgba(255,255,255,0.04);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+      <input type="text" id="invInvitadoPor" placeholder="Invitado por (nombre)" required style="background:rgba(255,255,255,0.04);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:11px 14px;color:#f5ede8;font-size:0.88rem;outline:none;"/>
+      <button type="submit" style="background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;color:#fff;font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;padding:13px;border-radius:8px;cursor:pointer;text-transform:uppercase;">Registrar Invitado</button>
+    </form>
+    <div id="invResult" style="display:none;padding:12px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;"></div>
+  </div>
+</div>
 
   <script src="dashboard.js"></script>
 </body>

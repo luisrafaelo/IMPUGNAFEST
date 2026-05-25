@@ -315,7 +315,7 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
 .table-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--c-border); flex-wrap: wrap; gap: 10px; }
 .table-filters { display: flex; gap: 8px; }
 
-.table-filter-select, .table-search {
+.table-search {
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
@@ -325,6 +325,25 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
   font-size: 0.8rem;
   outline: none;
   transition: var(--transition);
+}
+/* Reemplaza tu regla actual del select por: */
+.table-filter-select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--c-text);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  outline: none;
+  transition: var(--transition);
+  /* Fix opciones del dropdown */
+  color-scheme: dark;
+}
+
+.table-filter-select option {
+  background: #150f18;
+  color: #2ba1d8;
 }
 
 .table-filter-select:focus, .table-search:focus { border-color: var(--c-accent); }
@@ -342,6 +361,7 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
 .badge-type, .badge-status { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .badge-preventa  { background: rgba(255,106,0,0.12); color: var(--c-accent); border: 1px solid rgba(255,106,0,0.25); }
 .badge-general   { background: rgba(255,60,0,0.12);  color: #ff7040; border: 1px solid rgba(255,60,0,0.25); }
+.badge-preferencial { background: rgba(168,85,247,0.12);  color: #a855f7;  border: 1px solid rgba(168,85,247,0.25);}
 .badge-vip       { background: rgba(255,215,0,0.12); color: var(--c-gold); border: 1px solid rgba(255,215,0,0.25); }
 .badge-confirmed { background: rgba(0,255,136,0.1);  color: var(--c-green); border: 1px solid rgba(0,255,136,0.25); }
 .badge-pending   { background: rgba(255,165,0,0.1);  color: #ffa500; border: 1px solid rgba(255,165,0,0.25); }
@@ -407,3 +427,36 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
   text-transform: uppercase;
 }
 .btn-checkin:hover { opacity: 0.85; transform: translateY(-1px); }
+.dist-bar--preferencial {
+  background: linear-gradient(180deg, #a855f7, rgba(168,85,247,0.3));
+}
+.btn-vip-reg {
+  background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
+}
+
+.inv-tipo-opt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(168,85,247,0.15);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--c-text-2);
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+
+.inv-tipo-opt.active {
+  border-color: #a855f7;
+  background: rgba(168,85,247,0.08);
+  color: #a855f7;
+}
+
+.inv-tipo-opt:hover { border-color: rgba(168,85,247,0.4); }

@@ -1,5 +1,5 @@
 'use strict';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAEMH-dXsmAoJbCpqGoNjzlNtpay4VNk7Y1Q5EBvHxI4wDjNAvjcJBSC4QqZ7vPlk/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwROYWaTJC_OE8scI7wcIEAo5-3TngkiJ5WWgGwLaUkNAGuHnuE1xiqI3F7BzFnqwus/exec';
 const PASS = 'CEIE-BYTE-2026';
 const TOTAL_ENTRADAS = 750;
 
@@ -56,6 +56,8 @@ document.getElementById('pinInput').addEventListener('keydown', e => {
 if (sessionStorage.getItem('dash_auth') === '1') mostrarDashboard();
 
 /* ── CARGA ÚNICA ── */
+let filtrosIniciados = false;
+
 function cargarTodo() {
   ['kpi-vendidas','kpi-disponibles','kpi-ingresos','kpi-validacion'].forEach(id => {
     const el = document.getElementById(id);
@@ -79,29 +81,35 @@ function cargarTodo() {
 
     if (!d.rows.length) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--c-text-3)">Sin registros</td></tr>';
-      return;
+    } else {
+      tbody.innerHTML = d.rows.map(r => {
+        const isPending  = r.estado === 'PENDIENTE';
+        const badgeClass = isPending ? 'badge-pending' : 'badge-confirmed';
+        const badgeText  = isPending ? 'Pendiente' : 'Confirmado';
+        const tipoClass  = r.tipo === 'Preventa' ? 'badge-preventa'
+                         : r.tipo === 'VIP'      ? 'badge-vip'
+                         : r.tipo === 'Preferencial' ? 'badge-preferencial'
+                         : 'badge-general';
+        const accionBtn  = isPending
+          ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}','${r.telefono}','${r.nombre}','${r.tipo}',this)">Aprobar</button>`
+          : '—';
+        return `<tr>
+          <td><code>${r.serial}</code></td>
+          <td>${r.nombre}</td>
+          <td><span class="badge-type ${tipoClass}">${r.tipo}</span></td>
+          <td>${r.staff}</td>
+          <td><span class="badge-status ${badgeClass}">${badgeText}</span></td>
+          <td>${r.fecha}</td>
+          <td>${accionBtn}</td>
+        </tr>`;
+      }).join('');
     }
 
-    tbody.innerHTML = d.rows.map(r => {
-      const isPending  = r.estado === 'PENDIENTE';
-      const badgeClass = isPending ? 'badge-pending' : 'badge-confirmed';
-      const badgeText  = isPending ? 'Pendiente' : 'Confirmado';
-      const tipoClass  = r.tipo === 'Preventa' ? 'badge-preventa' : r.tipo === 'VIP' ? 'badge-vip' : 'badge-general';
-      const accionBtn  = isPending
-        ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}','${r.telefono}','${r.nombre}','${r.tipo}',this)">Aprobar</button>`
-        : '—';
-      return `<tr>
-        <td><code>${r.serial}</code></td>
-        <td>${r.nombre}</td>
-        <td><span class="badge-type ${tipoClass}">${r.tipo}</span></td>
-        <td>${r.staff}</td>
-        <td><span class="badge-status ${badgeClass}">${badgeText}</span></td>
-        <td>${r.fecha}</td>
-        <td>${accionBtn}</td>
-      </tr>`;
-    }).join('');
-
-    initFiltros();
+    // Iniciar filtros solo la primera vez
+    if (!filtrosIniciados) {
+      initFiltros();
+      filtrosIniciados = true;
+    }
   })
   .catch(() => {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--c-magenta)">Error al cargar</td></tr>';
@@ -168,10 +176,11 @@ function renderDist(dist) {
   const total = dist.preventa + dist.general + dist.vip || 1;
   const max   = Math.max(dist.preventa, dist.general, dist.vip, 1);
   [
-    { id: 'dist-preventa', count: dist.preventa },
-    { id: 'dist-general',  count: dist.general  },
-    { id: 'dist-vip',      count: dist.vip       },
-  ].forEach(item => {
+  { id: 'dist-preventa',    count: dist.preventa    },
+  { id: 'dist-general',     count: dist.general     },
+  { id: 'dist-preferencial',count: dist.preferencial },
+  { id: 'dist-vip',         count: dist.vip         },
+].forEach(item => {
     const wrap = document.getElementById(item.id);
     if (!wrap) return;
     wrap.querySelector('.dist-bar').style.height  = Math.round(item.count / max * 100) + '%';
@@ -227,18 +236,25 @@ function aprobarEntrada(serial, telefono, nombre, tipo, btn) {
 /* ── MODAL STAFF ── */
 function abrirModalStaff() {
   document.getElementById('modalStaff').style.display = 'flex';
+  document.getElementById('formStaffDash').reset();
+  document.getElementById('staffDashResult').style.display = 'none';
+  const btn = document.querySelector('#formStaffDash button[type="submit"]');
+  btn.disabled    = false;
+  btn.textContent = 'Validar y Registrar';
 }
 
 function cerrarModalStaff() {
   document.getElementById('modalStaff').style.display = 'none';
   document.getElementById('formStaffDash').reset();
   document.getElementById('staffDashResult').style.display = 'none';
+  const btn = document.querySelector('#formStaffDash button[type="submit"]');
+  btn.disabled    = false;
+  btn.textContent = 'Validar y Registrar';
 }
 
 async function registrarStaffDash(e) {
   e.preventDefault();
   const serial    = document.getElementById('sdSerial').value.trim().toUpperCase();
-  const token     = document.getElementById('sdToken').value.trim().toUpperCase();
   const nombre    = document.getElementById('sdNombre').value.trim();
   const telefono  = document.getElementById('sdTelefono').value.trim();
   const staffCode = document.getElementById('sdStaff').value.trim().toUpperCase();
@@ -246,10 +262,14 @@ async function registrarStaffDash(e) {
   res.style.display = 'none';
 
   try {
-    const r    = await fetch(APPS_SCRIPT_URL, {
+    const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'validarStaff', nombre, telefono, serial, token, staffCode, comprobanteB64: '', fileName: 'dash-manual' })
+      body: JSON.stringify({
+        action: 'validarStaff',
+        nombre, telefono, serial, staffCode,
+        comprobanteB64: '', fileName: 'dash-manual'
+      })
     });
     const data = await r.json();
     res.style.display = 'flex';
@@ -260,5 +280,90 @@ async function registrarStaffDash(e) {
     res.style.display = 'flex';
     res.className     = 'staffdash-result error';
     res.textContent   = '❌ Error de conexión.';
+  } finally {
+    const btn = document.querySelector('#formStaffDash button[type="submit"]');
+    if (!document.getElementById('staffDashResult').classList.contains('success')) {
+      btn.disabled    = false;
+      btn.textContent = 'Validar y Registrar';
+    }
+  }
+}
+let invTipoSeleccionado = 'vip';
+
+function selectInvTipo(tipo) {
+  invTipoSeleccionado = tipo;
+  document.getElementById('inv-opt-vip').classList.toggle('active', tipo === 'vip');
+  document.getElementById('inv-opt-preferencial').classList.toggle('active', tipo === 'preferencial');
+}
+
+function abrirModalInvitado() {
+  document.getElementById('modalInvitado').style.display = 'flex';
+  document.getElementById('formInvitado').reset();
+  document.getElementById('invResult').style.display = 'none';
+  const btn = document.querySelector('#formInvitado button[type="submit"]');
+  btn.disabled    = false;
+  btn.textContent = 'Registrar Invitado';
+  invTipoSeleccionado = 'vip';
+  selectInvTipo('vip');
+}
+
+function cerrarModalInvitado() {
+  document.getElementById('modalInvitado').style.display = 'none';
+  document.getElementById('formInvitado').reset();
+  document.getElementById('invResult').style.display = 'none';
+  const btn = document.querySelector('#formInvitado button[type="submit"]');
+  btn.disabled    = false;
+  btn.textContent = 'Registrar Invitado';
+}
+
+async function registrarInvitado(e) {
+  e.preventDefault();
+
+  const nombre      = document.getElementById('invNombre').value.trim();
+  const telefono    = document.getElementById('invTelefono').value.trim();
+  const invitadoPor = document.getElementById('invInvitadoPor').value.trim();
+  const res         = document.getElementById('invResult');
+  const submitBtn   = document.querySelector('#formInvitado button[type="submit"]');
+
+  // Confirmación antes de enviar
+  if (!confirm(`¿Registrar a ${nombre} como ${invTipoSeleccionado === 'vip' ? 'VIP' : 'Preferencial'}?`)) return;
+
+  // Bloquear botón
+  submitBtn.disabled    = true;
+  submitBtn.textContent = 'Registrando...';
+  res.style.display     = 'none';
+
+  try {
+    const r    = await fetch(APPS_SCRIPT_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'registrarInvitado',
+        nombre, telefono, invitadoPor,
+        tipo: invTipoSeleccionado
+      })
+    });
+    const data = await r.json();
+
+    res.style.display = 'flex';
+    res.className     = `staffdash-result ${data.ok ? 'success' : 'error'}`;
+    res.textContent   = data.ok
+      ? `✅ ${data.nombre} registrado como ${data.tipo} · Serial: ${data.serial}`
+      : `❌ ${data.msg}`;
+
+    if (data.ok) {
+      cargarTodo();
+      setTimeout(cerrarModalInvitado, 3000);
+    } else {
+      // Reactivar si hay error
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'Registrar Invitado';
+    }
+  } catch {
+    res.style.display     = 'flex';
+    res.className         = 'staffdash-result error';
+    res.textContent       = '❌ Error de conexión.';
+    submitBtn.disabled    = false;
+    submitBtn.textContent = 'Registrar Invitado';
   }
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAEMH-dXsmAoJbCpqGoNjzlNtpay4VNk7Y1Q5EBvHxI4wDjNAvjcJBSC4QqZ7vPlk/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwROYWaTJC_OE8scI7wcIEAo5-3TngkiJ5WWgGwLaUkNAGuHnuE1xiqI3F7BzFnqwus/exec';
 /* ─── ESTADO GLOBAL ─── */
 const STATE = {
   selectedTicketType: null,
@@ -89,7 +89,7 @@ function selectTicket(type, price) {
     card.classList.toggle('ticket-card--selected', card.dataset.type === type);
   });
 if (type === 'inner') {
-  showToast('info', '🔮 Inner Circle — solo por invitación personal.', 4000);
+  showToast('info', '🔮 Preferencial — solo por invitación personal.', 4000);
   return;
 }
   if (type === 'vip') {
@@ -124,16 +124,11 @@ async function submitStaffForm(e) {
   const nombre    = document.getElementById('staffName').value.trim();
   const telefono  = document.getElementById('staffPhone').value.trim();
   const serial    = document.getElementById('staffSerial').value.trim().toUpperCase();
-  const token     = document.getElementById('staffToken').value.trim().toUpperCase();
   const staffCode = document.getElementById('staffCode').value.trim().toUpperCase();
   const file      = document.getElementById('staffFile').files[0];
 
-  if (!nombre || !telefono || !serial || !token || !staffCode) {
+  if (!nombre || !telefono || !serial || !staffCode) {
     showValidationResult('staffResult', 'error', '⚠️ Todos los campos son obligatorios.');
-    return;
-  }
-  if (token.length !== 8) {
-    showValidationResult('staffResult', 'error', '🔐 El token debe tener 8 caracteres.');
     return;
   }
   if (!staffCode.startsWith('STAFF-')) {
@@ -146,8 +141,6 @@ async function submitStaffForm(e) {
   }
 
   showLoader(true);
-
-  // Convertir imagen a base64
   const b64 = await fileToBase64(file);
 
   try {
@@ -155,16 +148,15 @@ async function submitStaffForm(e) {
       method:  'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
-        action:         'validarStaff',
-        nombre, telefono, serial, token, staffCode,
+        action: 'validarStaff',
+        nombre, telefono, serial, staffCode,
         comprobanteB64: b64.split(',')[1],
-        fileName:       file.name
+        fileName: file.name
       })
     });
 
     const data = await res.json();
     showLoader(false);
-
     const tipo = data.ok ? 'success' : (data.code === 'PENDING' ? 'warning' : 'error');
     showValidationResult('staffResult', tipo, data.msg);
 
