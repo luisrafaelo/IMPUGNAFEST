@@ -45,20 +45,20 @@
 <div class="hero-content">
   <div class="hero-badge">
     <span class="badge-dot"></span>
-    <span>EVENTO EN VIVO · 29 MAYO 2025</span>
+    <span>EVENTO EN VIVO · 29 MAYO 2026</span>
   </div>
   <h1 class="hero-title">
     <span class="title-line">IMPUGNA</span>
     <span class="title-line title-line--accent">FEST</span>
   </h1>
-  <p class="hero-subtitle">Premiación de campeones de Futsal y Wally · Grupos en vivo · Hora Loca · Los Bandidos de la Cumbia · Doble Andino</p>
+  <p class="hero-subtitle">Premiación a los campeones de Futsal y Wally · Grupos en vivo · Hora Loca · Los Bandidos de la Cumbia · Doble Andino</p>
 
   <div class="hero-meta">
     <div class="meta-item">
       <span class="meta-icon">📅</span>
       <div>
         <span class="meta-label">Fecha</span>
-        <span class="meta-value">Viernes 29 de Mayo, 2025</span>
+        <span class="meta-value">Viernes 29 de Mayo, 2026</span>
       </div>
     </div>
     <div class="meta-divider"></div>
@@ -66,7 +66,7 @@
       <span class="meta-icon">🕓</span>
       <div>
         <span class="meta-label">Hora</span>
-        <span class="meta-value">4:00 PM en adelante</span>
+        <span class="meta-value">4:30 PM en adelante</span>
       </div>
     </div>
     <div class="meta-divider"></div>
@@ -74,7 +74,7 @@
       <span class="meta-icon">📍</span>
       <div>
         <span class="meta-label">Lugar</span>
-        <span class="meta-value">Centro Fabril, La Paz</span>
+        <span class="meta-value">Salón Fabril, La Paz</span>
       </div>
     </div>
   </div>
@@ -111,7 +111,6 @@
 </div>
 
     <div class="hero-scroll-hint">
-      <span>scroll</span>
       <div class="scroll-arrow"></div>
     </div>
   </section>
@@ -145,12 +144,13 @@
               <li><span class="feat-icon">✓</span> Acceso al recinto</li>
               <li><span class="feat-icon">✓</span> Zona general</li>
               <li><span class="feat-icon">✓</span> Shows en vivo</li>
+              <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
             </ul>
             <div class="ticket-availability">
               <div class="availability-bar">
-                <div class="availability-fill" style="width: 72%"></div>
+                <div class="availability-fill" style="width: 90%"></div>
               </div>
-              <span class="availability-text">28% disponible</span>
+              <span class="availability-text">10% disponible</span>
             </div>
           </div>
           <button class="ticket-btn" onclick="selectTicket('preventa', 10)">Seleccionar</button>
@@ -174,13 +174,13 @@
               <li><span class="feat-icon">✓</span> Acceso al recinto</li>
               <li><span class="feat-icon">✓</span> Zona general</li>
               <li><span class="feat-icon">✓</span> Shows en vivo</li>
-              <li><span class="feat-icon">✓</span> Acceso a stands</li>
+              <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
             </ul>
             <div class="ticket-availability">
               <div class="availability-bar">
-                <div class="availability-fill" style="width: 55%"></div>
+                <div class="availability-fill" style="width: 50%"></div>
               </div>
-              <span class="availability-text">45% disponible</span>
+              <span class="availability-text">50% disponible</span>
             </div>
           </div>
           <button class="ticket-btn" onclick="selectTicket('general', 15)">Seleccionar</button>
@@ -202,16 +202,16 @@
             <p class="ticket-desc">Solo por invitación. Experiencia exclusiva y personalizada.</p>
             <ul class="ticket-features">
               <li><span class="feat-icon">✓</span> Zona VIP exclusiva</li>
-              <li><span class="feat-icon">✓</span> Meet & Greet</li>
-              <li><span class="feat-icon">✓</span> Acceso backstage</li>
-              <li><span class="feat-icon">✓</span> Kit de bienvenida</li>
+              <li><span class="feat-icon">✓</span> Atención premier</li>
+              <li><span class="feat-icon">✓</span> Guardaroía Gratis</li>
+              <li><span class="feat-icon">✓</span> Cortesía de bienvenida</li>
               <li><span class="feat-icon">✓</span> Prioridad total</li>
             </ul>
             <div class="ticket-availability">
               <div class="availability-bar">
-                <div class="availability-fill" style="width: 90%"></div>
+                <div class="availability-fill" style="width: 95%"></div>
               </div>
-              <span class="availability-text">Solo 10 cupos</span>
+              <span class="availability-text">Solo 5 cupos</span>
             </div>
           </div>
           <button class="ticket-btn ticket-btn--vip" onclick="selectTicket('vip', 0)">Solo invitación</button>
@@ -233,7 +233,7 @@
       <!-- TABS -->
       <div class="reg-tabs">
         <button class="reg-tab active" data-tab="staff" onclick="switchTab('staff')">
-          <span class="tab-icon">🧑‍💼</span>
+          <span class="tab-icon">🧑</span>
           <div>
             <span class="tab-title">Compra con Staff</span>
             <span class="tab-sub">Ya tengo entrada física</span>
@@ -282,7 +282,7 @@
                   Serial de Entrada <span class="req">*</span>
                   <span class="label-hint">Impreso en la entrada</span>
                 </label>
-                <input type="text" id="staffSerial" placeholder="Ej: NX-2025-XXXXX" required autocomplete="off" />
+                <input type="text" id="staffSerial" placeholder="Ej: 123XXXXX" required autocomplete="off" />
               </div>
               <div class="form-group">
                 <label for="staffToken">
@@ -296,7 +296,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
-                <input type="text" id="staffCode" placeholder="Ej: STAFF-001" required autocomplete="off" />
+                <input type="text" id="staffCode" placeholder="Ej: STAFF-NAT" required autocomplete="off" />
               </div>
               <div class="form-group">
                 <label>Comprobante de Pago <span class="req">*</span></label>
@@ -331,7 +331,7 @@
             <div class="reg-card-icon">🌐</div>
             <div>
               <h3>Compra Directa Online</h3>
-              <p>Completa el proceso y recibe tu entrada digital al instante.</p>
+              <p>Completa el proceso y recibe tu entrada digital.</p>
             </div>
           </div>
 
@@ -453,8 +453,8 @@
 
               <div class="tg-ticket">
                 <div class="tg-ticket-top">
-                  <div class="tg-event">NEXUS FESTIVAL 2025</div>
-                  <div class="tg-date">15 Agosto · La Paz</div>
+                  <div class="tg-event">IMPUGNA FEST 2026</div>
+                  <div class="tg-date">29 MAYO · Salón Fabril</div>
                 </div>
                 <div class="tg-perforations"></div>
                 <div class="tg-ticket-bottom">
@@ -513,7 +513,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="verSerial">Serial <span class="req">*</span></label>
-          <input type="text" id="verSerial" placeholder="Ej: NX-2026-XXXXXXXX" autocomplete="off" />
+          <input type="text" id="verSerial" placeholder="Ej: 123XXXXXXXX" autocomplete="off" />
         </div>
         <div class="form-group">
           <label for="verToken">Token Secreto <span class="req">*</span></label>
