@@ -101,6 +101,11 @@ async function buscarManual() {
 
 /* ── CORE ── */
 async function procesarSerial(serial) {
+  // Mostrar loading
+  mostrarResultado('warning', '⏳', 'VERIFICANDO...', [
+    { label: 'Serial', value: serial }
+  ]);
+
   try {
     const res  = await fetch(APPS_SCRIPT_URL, {
       method:  'POST',
@@ -120,9 +125,9 @@ async function procesarSerial(serial) {
       ]);
     } else {
       const iconos = {
-        ALREADY_CHECKIN:   '🚫',
-        SERIAL_NOT_FOUND:  '❌',
-        NOT_CONFIRMED:     '⏳'
+        ALREADY_CHECKIN:  '🚫',
+        SERIAL_NOT_FOUND: '❌',
+        NOT_CONFIRMED:    '⏳'
       };
       mostrarResultado(
         data.code === 'NOT_CONFIRMED' ? 'warning' : 'error',
@@ -132,10 +137,30 @@ async function procesarSerial(serial) {
       );
     }
   } catch {
-    mostrarResultado('error', '❌', 'Error de conexión', [{ label: 'Detalle', value: 'Reintenta' }]);
+    mostrarResultado('error', '❌', 'Error de conexión', [
+      { label: 'Detalle', value: 'Reintenta' }
+    ]);
   }
 }
+async function buscarManual() {
+  const input  = document.getElementById('manualSerial');
+  const serial = input.value.trim().toUpperCase();
+  const btn    = document.querySelector('.manual-inner .btn');
 
+  if (!serial) {
+    mostrarResultado('error', '❌', 'Ingresa un serial', []);
+    return;
+  }
+
+  input.value      = '';
+  btn.disabled     = true;
+  btn.textContent  = '...';
+
+  await procesarSerial(serial);
+
+  btn.disabled    = false;
+  btn.textContent = 'Verificar';
+}
 /* ── UI ── */
 function mostrarResultado(tipo, icono, titulo, filas) {
   const box    = document.getElementById('resultBox');
