@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2u-FKU6rKHgpCL-emDcsAISBHfPc9mLbpQaHbIeWMUrHriOBuOOCgsL8l-8lWqWZi/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws3Z87M6e9HkJQ4jAHd80dpClqc8JUypABHooJqDCGnAbS2Rtkm7CAkOz1rodBCYkX/exec';
 /* ─── ESTADO GLOBAL ─── */
 const STATE = {
   selectedTicketType: null,

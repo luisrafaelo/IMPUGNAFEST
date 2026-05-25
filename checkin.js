@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2u-FKU6rKHgpCL-emDcsAISBHfPc9mLbpQaHbIeWMUrHriOBuOOCgsL8l-8lWqWZi/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws3Z87M6e9HkJQ4jAHd80dpClqc8JUypABHooJqDCGnAbS2Rtkm7CAkOz1rodBCYkX/exec'; 
 
 const PASS            = 'CEIE-BYTE-2026';
 
@@ -28,8 +28,8 @@ function checkLogin() {
 
 function mostrarMain() {
   document.getElementById('loginScreen').style.display = 'none';
-  const main = document.getElementById('mainScreen');
-  main.style.display = 'flex';
+  document.getElementById('mainScreen').style.display  = 'flex';
+  cargarIngresos();
 }
 
 if (sessionStorage.getItem('checkin_auth') === '1') mostrarMain();
@@ -184,4 +184,14 @@ function resetResult() {
   const box     = document.getElementById('resultBox');
   box.style.display = 'none';
   box.className = 'result-box';
+}
+async function cargarIngresos() {
+  try {
+    const res  = await fetch(`${APPS_SCRIPT_URL}?action=getCheckIns`);
+    const data = await res.json();
+    if (data.ok) {
+      ingresos = data.total;
+      document.getElementById('ingresoCount').textContent = ingresos;
+    }
+  } catch {}
 }
