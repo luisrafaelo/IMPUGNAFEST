@@ -8,6 +8,7 @@ const STATE = {
   currentStep: 1,
   uploadedFileStaff: null,
   uploadedFileOnline: null,
+  staffType:           'promo',
 };
 
 /* ══════════════════════════════════════════════════════
@@ -158,6 +159,7 @@ async function submitStaffForm(e) {
       body: JSON.stringify({
         action: 'validarStaff',
         nombre, telefono, serial, staffCode,
+        tipoEntrada: STATE.staffType,
         comprobanteB64: b64.split(',')[1],
         fileName: file.name
       })
@@ -252,6 +254,7 @@ if (step === 3) {
     }
     updateOnlineSummary();
     document.getElementById('paymentAmount').textContent = `${STATE.selectedTicketPrice} Bs.`;
+    document.getElementById('qrImagen').src = STATE.selectedTicketType === 'preventa' ? 'qr-promo.png' : 'qr-general.png';
   }
 
   /* Mostrar el paso */
@@ -587,4 +590,16 @@ function resetOnlineFlow() {
 
   document.getElementById('tgTicket2').style.display = 'none';
   document.getElementById('rowPersona2').style.display = 'none';
+}
+const STAFF_TYPE_DESC = {
+  promo:        '2 entradas por 25 Bs. — registra cada serial por separado.',
+  general:      'Entrada individual — 15 Bs.',
+  preferencial: 'Entrada de invitado — acceso preferencial sin costo.'
+};
+
+function selectStaffType(btn) {
+  document.querySelectorAll('.stt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  STATE.staffType = btn.dataset.stype;
+  document.getElementById('staffTypeDesc').textContent = STAFF_TYPE_DESC[STATE.staffType];
 }

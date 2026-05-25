@@ -286,65 +286,76 @@
       </div>
 
       <!-- ─── PANEL STAFF ─── -->
-      <div class="reg-panel active" id="panel-staff">
-        <div class="reg-card">
-          <div class="reg-card-header">
-            <div class="reg-card-icon">🎫</div>
-            <div>
-              <h3>Registro de Entrada Física</h3>
-              <p>Ingresa los datos de tu entrada comprada con un vendedor autorizado.</p>
-            </div>
+<div class="reg-panel active" id="panel-staff">
+  <div class="reg-card">
+    <div class="reg-card-header">
+      <div class="reg-card-icon">🎫</div>
+      <div>
+        <h3>Registro de Entrada Física</h3>
+        <p>Ingresa el serial de tu entrada y selecciona el tipo.</p>
+      </div>
+    </div>
+
+    <!-- Selector de tipo -->
+    <div class="staff-type-tabs">
+      <button class="stt-btn active" data-stype="promo"       onclick="selectStaffType(this)">🔥 Promo 2x25</button>
+      <button class="stt-btn"        data-stype="general"     onclick="selectStaffType(this)">⚡ General</button>
+      <button class="stt-btn"        data-stype="preventa" onclick="selectStaffType(this)">🔮 preventa</button>
+    </div>
+    <div class="staff-type-info" id="staffTypeInfo">
+      <span class="sti-dot"></span>
+      <span id="staffTypeDesc">2 entradas por 25 Bs. — registra cada serial por separado.</span>
+    </div>
+
+    <form class="reg-form" id="formStaff" onsubmit="submitStaffForm(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="staffName">Nombre completo <span class="req">*</span></label>
+          <input type="text" id="staffName" placeholder="Tu nombre completo" required />
+        </div>
+        <div class="form-group">
+          <label for="staffPhone">Teléfono <span class="req">*</span></label>
+          <input type="tel" id="staffPhone" placeholder="Ej: 70012345" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="staffSerial">
+            Serial de Entrada <span class="req">*</span>
+            <span class="label-hint">Impreso en la entrada</span>
+          </label>
+          <input type="text" id="staffSerial" placeholder="Ej: 123XXXXXXXX" required autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
+          <input type="text" id="staffCode" placeholder="Ej: STAFF-JAN" required autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Comprobante de Pago <span class="req">*</span></label>
+        <div class="file-upload" id="staffFileUpload" onclick="document.getElementById('staffFile').click()">
+          <input type="file" id="staffFile" accept="image/*,.pdf" hidden onchange="handleFileSelect(event, 'staffFileUpload')" />
+          <div class="file-upload-content">
+            <span class="file-upload-icon">📎</span>
+            <span class="file-upload-text">Subir comprobante</span>
+            <span class="file-upload-hint">PNG, JPG, PDF · Max 5MB</span>
           </div>
+        </div>
+      </div>
 
-          <form class="reg-form" id="formStaff" onsubmit="submitStaffForm(event)">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="staffName">Nombre completo <span class="req">*</span></label>
-                <input type="text" id="staffName" placeholder="Tu nombre completo" required />
-              </div>
-              <div class="form-group">
-                <label for="staffPhone">Teléfono <span class="req">*</span></label>
-                <input type="tel" id="staffPhone" placeholder="Ej: 70012345" required />
-              </div>
-            </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary btn-full">
+          <span>Validar y Registrar Entrada</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+    </form>
 
-<div class="form-row">
-  <div class="form-group">
-    <label for="staffSerial">
-      Serial de Entrada <span class="req">*</span>
-      <span class="label-hint">Impreso en la entrada</span>
-    </label>
-    <input type="text" id="staffSerial" placeholder="Ej: NX-2026-XXXXX" required autocomplete="off" />
-  </div>
-  <div class="form-group">
-    <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
-    <input type="text" id="staffCode" placeholder="Ej: STAFF-JAN" required autocomplete="off" />
+    <div class="validation-result" id="staffResult" style="display:none"></div>
   </div>
 </div>
-              <div class="form-group">
-                <label>Comprobante de Pago <span class="req">*</span></label>
-                <div class="file-upload" id="staffFileUpload" onclick="document.getElementById('staffFile').click()">
-                  <input type="file" id="staffFile" accept="image/*,.pdf" hidden onchange="handleFileSelect(event, 'staffFileUpload')" />
-                  <div class="file-upload-content">
-                    <span class="file-upload-icon">📎</span>
-                    <span class="file-upload-text">Subir comprobante QR</span>
-                    <span class="file-upload-hint">PNG, JPG, PDF · Max 5MB</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" class="btn-primary btn-full">
-                <span>Validar y Registrar Entrada</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              </button>
-            </div>
-          </form>
-
-          <!-- Resultado de validación -->
-          <div class="validation-result" id="staffResult" style="display:none"></div>
-        </div>
       </div>
 
       <!-- ─── PANEL ONLINE ─── -->
@@ -431,34 +442,29 @@
           <!-- Paso 3: Pago -->
           <div class="online-step" id="step-3">
             <h4 class="step-title">Realiza tu pago</h4>
-            <div class="payment-box">
-              <div class="payment-qr-area">
-                <div class="qr-placeholder">
-                  <div class="qr-mock">
-                    <div class="qr-corner qr-corner--tl"></div>
-                    <div class="qr-corner qr-corner--tr"></div>
-                    <div class="qr-corner qr-corner--bl"></div>
-                    <div class="qr-inner-grid"></div>
-                  </div>
-                  <p class="qr-label">QR de Pago</p>
-                  <p class="qr-sublabel">Escanea con tu banco o billetera</p>
-                </div>
-              </div>
-              <div class="payment-info">
-                <div class="payment-detail">
-                  <span class="pd-label">Monto a pagar</span>
-                  <span class="pd-value" id="paymentAmount">— Bs.</span>
-                </div>
-                <div class="payment-detail">
-                  <span class="pd-label">Concepto</span>
-                  <span class="pd-value">Impugna Fest 2026</span>
-                </div>
-                <div class="payment-detail">
-                  <span class="pd-label">Tipo</span>
-                  <span class="pd-value" id="paymentType">—</span>
-                </div>
-              </div>
-            </div>
+<div class="payment-box">
+  <div class="payment-qr-area">
+    <div class="qr-placeholder">
+      <img id="qrImagen" src="" alt="QR de pago" style="width:160px;height:160px;border-radius:12px;object-fit:cover;" />
+      <p class="qr-label">QR de Pago</p>
+      <p class="qr-sublabel">Escanea con tu banco o billetera</p>
+    </div>
+  </div>
+  <div class="payment-info">
+    <div class="payment-detail">
+      <span class="pd-label">Monto a pagar</span>
+      <span class="pd-value" id="paymentAmount">— Bs.</span>
+    </div>
+    <div class="payment-detail">
+      <span class="pd-label">Concepto</span>
+      <span class="pd-value">IMPUGNA FEST 2025</span>
+    </div>
+    <div class="payment-detail">
+      <span class="pd-label">Tipo</span>
+      <span class="pd-value" id="paymentType">—</span>
+    </div>
+  </div>
+</div>
             <div class="form-group">
               <label>Sube tu comprobante de pago <span class="req">*</span></label>
               <div class="file-upload" id="onlineFileUpload" onclick="document.getElementById('onlineFile').click()">
