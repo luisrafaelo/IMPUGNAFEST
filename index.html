@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEIE EVENT — Sistema de Entradas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ NAVBAR ═══════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="logo.svg" alt="Impugna Fest" class="logo-img" />
+      <span class="logo-text">IMPUGNA FEST</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#entradas">Entradas</a></li>
+      <li><a href="#registro">Registro</a></li>
+      <li><a href="dashboard.html" onclick="openDashboard(event)">Dashboard</a></li>
+      <li><a href="#verificar">Verificar</a></li>
+    </ul>
+    <button class="nav-cta" onclick="scrollToSection('registro')">Obtener Entrada</button>
+    <button class="nav-burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+  <!-- ═══════════════════════════════ HERO ════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-orb hero-orb--1"></div>
+      <div class="hero-orb hero-orb--2"></div>
+      <div class="hero-orb hero-orb--3"></div>
+      <div class="hero-lines"></div>
+    </div>
+
+<div class="hero-content">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    <span>EVENTO EN VIVO · 29 MAYO 2025</span>
+  </div>
+  <h1 class="hero-title">
+    <span class="title-line">IMPUGNA</span>
+    <span class="title-line title-line--accent">FEST</span>
+  </h1>
+  <p class="hero-subtitle">Premiación de campeones de Futsal y Wally · Grupos en vivo · Hora Loca · Los Bandidos de la Cumbia · Doble Andino</p>
+
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-icon">📅</span>
+      <div>
+        <span class="meta-label">Fecha</span>
+        <span class="meta-value">Viernes 29 de Mayo, 2025</span>
+      </div>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-icon">🕓</span>
+      <div>
+        <span class="meta-label">Hora</span>
+        <span class="meta-value">4:00 PM en adelante</span>
+      </div>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-icon">📍</span>
+      <div>
+        <span class="meta-label">Lugar</span>
+        <span class="meta-value">Centro Fabril, La Paz</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="countdown" id="countdown">
+    <div class="countdown-unit">
+      <span class="countdown-num" id="cd-days">00</span>
+      <span class="countdown-label">días</span>
+    </div>
+    <span class="countdown-sep">:</span>
+    <div class="countdown-unit">
+      <span class="countdown-num" id="cd-hours">00</span>
+      <span class="countdown-label">horas</span>
+    </div>
+    <span class="countdown-sep">:</span>
+    <div class="countdown-unit">
+      <span class="countdown-num" id="cd-mins">00</span>
+      <span class="countdown-label">min</span>
+    </div>
+    <span class="countdown-sep">:</span>
+    <div class="countdown-unit">
+      <span class="countdown-num" id="cd-secs">00</span>
+      <span class="countdown-label">seg</span>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="scrollToSection('registro')">
+      <span>Comprar Entrada</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <button class="btn-ghost" onclick="scrollToSection('entradas')">Ver tipos</button>
+  </div>
+</div>
+
+    <div class="hero-scroll-hint">
+      <span>scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ ENTRADAS ════════════════════════════════ -->
+  <section class="section entradas-section" id="entradas">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">TICKETS</span>
+        <h2 class="section-title">Tipos de Entrada</h2>
+        <p class="section-sub">Elige tu experiencia. Cupos limitados.</p>
+      </div>
+
+      <div class="tickets-grid">
+
+        <!-- PREVENTA -->
+        <div class="ticket-card ticket-card--preventa" data-type="preventa">
+          <div class="ticket-glow"></div>
+          <div class="ticket-header">
+            <span class="ticket-badge">🔥 PREVENTA</span>
+            <div class="ticket-price">
+              <span class="price-amount">10</span>
+              <span class="price-currency">Bs.</span>
+            </div>
+          </div>
+          <div class="ticket-perforations"></div>
+          <div class="ticket-body">
+            <h3 class="ticket-name">Acceso General</h3>
+            <p class="ticket-desc">Precio especial de lanzamiento. Oferta por tiempo limitado.</p>
+            <ul class="ticket-features">
+              <li><span class="feat-icon">✓</span> Acceso al recinto</li>
+              <li><span class="feat-icon">✓</span> Zona general</li>
+              <li><span class="feat-icon">✓</span> Shows en vivo</li>
+            </ul>
+            <div class="ticket-availability">
+              <div class="availability-bar">
+                <div class="availability-fill" style="width: 72%"></div>
+              </div>
+              <span class="availability-text">28% disponible</span>
+            </div>
+          </div>
+          <button class="ticket-btn" onclick="selectTicket('preventa', 10)">Seleccionar</button>
+        </div>
+
+        <!-- GENERAL -->
+        <div class="ticket-card ticket-card--general" data-type="general">
+          <div class="ticket-glow"></div>
+          <div class="ticket-header">
+            <span class="ticket-badge">⚡ GENERAL</span>
+            <div class="ticket-price">
+              <span class="price-amount">15</span>
+              <span class="price-currency">Bs.</span>
+            </div>
+          </div>
+          <div class="ticket-perforations"></div>
+          <div class="ticket-body">
+            <h3 class="ticket-name">Acceso Estándar</h3>
+            <p class="ticket-desc">Precio regular. Entrada para el evento completo.</p>
+            <ul class="ticket-features">
+              <li><span class="feat-icon">✓</span> Acceso al recinto</li>
+              <li><span class="feat-icon">✓</span> Zona general</li>
+              <li><span class="feat-icon">✓</span> Shows en vivo</li>
+              <li><span class="feat-icon">✓</span> Acceso a stands</li>
+            </ul>
+            <div class="ticket-availability">
+              <div class="availability-bar">
+                <div class="availability-fill" style="width: 55%"></div>
+              </div>
+              <span class="availability-text">45% disponible</span>
+            </div>
+          </div>
+          <button class="ticket-btn" onclick="selectTicket('general', 15)">Seleccionar</button>
+        </div>
+
+        <!-- VIP -->
+        <div class="ticket-card ticket-card--vip" data-type="vip">
+          <div class="ticket-glow"></div>
+          <div class="ticket-ribbon">VIP</div>
+          <div class="ticket-header">
+            <span class="ticket-badge">👑 INVITACIÓN</span>
+            <div class="ticket-price">
+              <span class="price-amount">—</span>
+            </div>
+          </div>
+          <div class="ticket-perforations"></div>
+          <div class="ticket-body">
+            <h3 class="ticket-name">Acceso VIP</h3>
+            <p class="ticket-desc">Solo por invitación. Experiencia exclusiva y personalizada.</p>
+            <ul class="ticket-features">
+              <li><span class="feat-icon">✓</span> Zona VIP exclusiva</li>
+              <li><span class="feat-icon">✓</span> Meet & Greet</li>
+              <li><span class="feat-icon">✓</span> Acceso backstage</li>
+              <li><span class="feat-icon">✓</span> Kit de bienvenida</li>
+              <li><span class="feat-icon">✓</span> Prioridad total</li>
+            </ul>
+            <div class="ticket-availability">
+              <div class="availability-bar">
+                <div class="availability-fill" style="width: 90%"></div>
+              </div>
+              <span class="availability-text">Solo 10 cupos</span>
+            </div>
+          </div>
+          <button class="ticket-btn ticket-btn--vip" onclick="selectTicket('vip', 0)">Solo invitación</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ REGISTRO / FORMULARIO ═══════════════════════ -->
+  <section class="section registro-section" id="registro">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">ACCESO</span>
+        <h2 class="section-title">Obtener Entrada</h2>
+        <p class="section-sub">Elige cómo deseas adquirir tu entrada al evento.</p>
+      </div>
+
+      <!-- TABS -->
+      <div class="reg-tabs">
+        <button class="reg-tab active" data-tab="staff" onclick="switchTab('staff')">
+          <span class="tab-icon">🧑‍💼</span>
+          <div>
+            <span class="tab-title">Compra con Staff</span>
+            <span class="tab-sub">Ya tengo entrada física</span>
+          </div>
+        </button>
+        <button class="reg-tab" data-tab="online" onclick="switchTab('online')">
+          <span class="tab-icon">🌐</span>
+          <div>
+            <span class="tab-title">Compra Online</span>
+            <span class="tab-sub">Comprar ahora desde aquí</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- ─── PANEL STAFF ─── -->
+      <div class="reg-panel active" id="panel-staff">
+        <div class="reg-card">
+          <div class="reg-card-header">
+            <div class="reg-card-icon">🎫</div>
+            <div>
+              <h3>Registro de Entrada Física</h3>
+              <p>Ingresa los datos de tu entrada comprada con un vendedor autorizado.</p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="info-icon">ℹ️</span>
+            <p>El <strong>Serial</strong> viene impreso en tu entrada física. El <strong>Token Secreto</strong>Te propocionará el Staff. <strong>Ambos son obligatorios</strong> para verificar la autenticidad.</p>
+          </div>
+
+          <form class="reg-form" id="formStaff" onsubmit="submitStaffForm(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staffName">Nombre completo <span class="req">*</span></label>
+                <input type="text" id="staffName" placeholder="Tu nombre completo" required />
+              </div>
+              <div class="form-group">
+                <label for="staffPhone">Teléfono <span class="req">*</span></label>
+                <input type="tel" id="staffPhone" placeholder="Ej: 70012345" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staffSerial">
+                  Serial de Entrada <span class="req">*</span>
+                  <span class="label-hint">Impreso en la entrada</span>
+                </label>
+                <input type="text" id="staffSerial" placeholder="Ej: NX-2025-XXXXX" required autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label for="staffToken">
+                  Token Secreto <span class="req">*</span>
+                  <span class="label-hint">Código oculto en la entrada</span>
+                </label>
+                <input type="text" id="staffToken" placeholder="Token de 8 caracteres" required autocomplete="off" maxlength="8" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staffCode">Código de Vendedor <span class="req">*</span></label>
+                <input type="text" id="staffCode" placeholder="Ej: STAFF-001" required autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label>Comprobante de Pago <span class="req">*</span></label>
+                <div class="file-upload" id="staffFileUpload" onclick="document.getElementById('staffFile').click()">
+                  <input type="file" id="staffFile" accept="image/*,.pdf" hidden onchange="handleFileSelect(event, 'staffFileUpload')" />
+                  <div class="file-upload-content">
+                    <span class="file-upload-icon">📎</span>
+                    <span class="file-upload-text">Subir comprobante QR</span>
+                    <span class="file-upload-hint">PNG, JPG, PDF · Max 5MB</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-full">
+                <span>Validar y Registrar Entrada</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </button>
+            </div>
+          </form>
+
+          <!-- Resultado de validación -->
+          <div class="validation-result" id="staffResult" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- ─── PANEL ONLINE ─── -->
+      <div class="reg-panel" id="panel-online">
+        <div class="reg-card">
+          <div class="reg-card-header">
+            <div class="reg-card-icon">🌐</div>
+            <div>
+              <h3>Compra Directa Online</h3>
+              <p>Completa el proceso y recibe tu entrada digital al instante.</p>
+            </div>
+          </div>
+
+          <!-- Paso 1: Selección -->
+          <div class="online-step active" id="step-1">
+            <div class="step-indicator">
+              <div class="step-dot active"></div>
+              <div class="step-line"></div>
+              <div class="step-dot"></div>
+              <div class="step-line"></div>
+              <div class="step-dot"></div>
+              <div class="step-line"></div>
+              <div class="step-dot"></div>
+            </div>
+            <div class="step-label-row">
+              <span class="step-label active">Tipo</span>
+              <span class="step-label">Datos</span>
+              <span class="step-label">Pago</span>
+              <span class="step-label">Entrada</span>
+            </div>
+
+            <h4 class="step-title">Selecciona tipo de entrada</h4>
+            <div class="online-ticket-selector">
+              <div class="online-ticket" data-type="preventa" data-price="10" onclick="selectOnlineTicket(this)">
+                <div class="ot-info">
+                  <span class="ot-badge">PREVENTA</span>
+                  <span class="ot-name">Acceso General</span>
+                </div>
+                <span class="ot-price">10 Bs.</span>
+                <div class="ot-check">✓</div>
+              </div>
+              <div class="online-ticket" data-type="general" data-price="15" onclick="selectOnlineTicket(this)">
+                <div class="ot-info">
+                  <span class="ot-badge ot-badge--general">GENERAL</span>
+                  <span class="ot-name">Acceso Estándar</span>
+                </div>
+                <span class="ot-price">15 Bs.</span>
+                <div class="ot-check">✓</div>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="goToStep(2)" id="btnStep1">Continuar</button>
+          </div>
+
+          <!-- Paso 2: Datos personales -->
+          <div class="online-step" id="step-2">
+            <h4 class="step-title">Tus datos personales</h4>
+            <form class="reg-form" id="formOnline" onsubmit="goToStep(3); return false;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="onlineName">Nombre completo <span class="req">*</span></label>
+                  <input type="text" id="onlineName" placeholder="Tu nombre completo" required />
+                </div>
+                <div class="form-group">
+                  <label for="onlinePhone">Teléfono <span class="req">*</span></label>
+                  <input type="tel" id="onlinePhone" placeholder="Ej: 70012345" required />
+                </div>
+              </div>
+              <div class="selected-ticket-summary" id="ticketSummary">
+                <span class="summary-icon">🎫</span>
+                <span id="summaryText">Selecciona un tipo de entrada primero</span>
+              </div>
+              <button type="submit" class="btn-primary">Continuar al Pago</button>
+            </form>
+          </div>
+
+          <!-- Paso 3: Pago -->
+          <div class="online-step" id="step-3">
+            <h4 class="step-title">Realiza tu pago</h4>
+            <div class="payment-box">
+              <div class="payment-qr-area">
+                <div class="qr-placeholder">
+                  <div class="qr-mock">
+                    <div class="qr-corner qr-corner--tl"></div>
+                    <div class="qr-corner qr-corner--tr"></div>
+                    <div class="qr-corner qr-corner--bl"></div>
+                    <div class="qr-inner-grid"></div>
+                  </div>
+                  <p class="qr-label">QR de Pago</p>
+                  <p class="qr-sublabel">Escanea con tu banco o billetera</p>
+                </div>
+              </div>
+              <div class="payment-info">
+                <div class="payment-detail">
+                  <span class="pd-label">Monto a pagar</span>
+                  <span class="pd-value" id="paymentAmount">— Bs.</span>
+                </div>
+                <div class="payment-detail">
+                  <span class="pd-label">Concepto</span>
+                  <span class="pd-value">Impugna Fest 2026</span>
+                </div>
+                <div class="payment-detail">
+                  <span class="pd-label">Tipo</span>
+                  <span class="pd-value" id="paymentType">—</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Sube tu comprobante de pago <span class="req">*</span></label>
+              <div class="file-upload" id="onlineFileUpload" onclick="document.getElementById('onlineFile').click()">
+                <input type="file" id="onlineFile" accept="image/*,.pdf" hidden onchange="handleFileSelect(event, 'onlineFileUpload')" />
+                <div class="file-upload-content">
+                  <span class="file-upload-icon">📎</span>
+                  <span class="file-upload-text">Subir comprobante</span>
+                  <span class="file-upload-hint">PNG, JPG, PDF · Max 5MB</span>
+                </div>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="processOnlinePayment()">Confirmar Pago y Obtener Entrada</button>
+          </div>
+
+          <!-- Paso 4: Entrada generada -->
+          <div class="online-step" id="step-4">
+            <div class="ticket-generated">
+              <div class="tg-header">
+                <div class="tg-check-icon">✓</div>
+                <h4>¡Entrada Confirmada!</h4>
+                <p>Guarda tu serial y token. Los necesitarás para ingresar al evento.</p>
+              </div>
+
+              <div class="tg-ticket">
+                <div class="tg-ticket-top">
+                  <div class="tg-event">NEXUS FESTIVAL 2025</div>
+                  <div class="tg-date">15 Agosto · La Paz</div>
+                </div>
+                <div class="tg-perforations"></div>
+                <div class="tg-ticket-bottom">
+                  <div class="tg-fields">
+                    <div class="tg-field">
+                      <span class="tg-field-label">TITULAR</span>
+                      <span class="tg-field-value" id="tgName">—</span>
+                    </div>
+                    <div class="tg-field">
+                      <span class="tg-field-label">TIPO</span>
+                      <span class="tg-field-value" id="tgType">—</span>
+                    </div>
+                    <div class="tg-field tg-field--serial">
+                      <span class="tg-field-label">SERIAL</span>
+                      <span class="tg-field-value tg-serial" id="tgSerial">—</span>
+                    </div>
+                    <div class="tg-field tg-field--token">
+                      <span class="tg-field-label">TOKEN SECRETO</span>
+                      <span class="tg-field-value tg-token" id="tgToken">—</span>
+                    </div>
+                  </div>
+                  <div class="tg-qr-area">
+                    <div class="qr-placeholder qr-placeholder--small">
+                      <div class="qr-mock qr-mock--small">
+                        <div class="qr-corner qr-corner--tl"></div>
+                        <div class="qr-corner qr-corner--tr"></div>
+                        <div class="qr-corner qr-corner--bl"></div>
+                        <div class="qr-inner-grid"></div>
+                      </div>
+                    </div>
+                    <p class="tg-qr-label">QR de Acceso</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tg-warning">
+                <span>⚠️</span>
+                <p>Guarda una captura de pantalla. Este es tu único comprobante digital.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- ════════════════════════════ VERIFICAR ═══════════════════════════════ -->
+<section class="section verificar-section" id="verificar">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">ESTADO</span>
+      <h2 class="section-title">Verificar mi Entrada</h2>
+      <p class="section-sub">Consulta el estado de tu registro en cualquier momento.</p>
+    </div>
+    <div class="verificar-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="verSerial">Serial <span class="req">*</span></label>
+          <input type="text" id="verSerial" placeholder="Ej: NX-2026-XXXXXXXX" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="verToken">Token Secreto <span class="req">*</span></label>
+          <input type="text" id="verToken" placeholder="8 caracteres" maxlength="8" autocomplete="off" />
+        </div>
+      </div>
+      <button class="btn-primary" onclick="verificarEntrada()">
+        <span>Consultar Estado</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+      </button>
+      <div class="validation-result" id="verResult" style="display:none"></div>
+    </div>
+  </div>
+</section>
+  <!-- ════════════════════════════ FOOTER ═════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">IMPUGNA FEST 2026</span>
+        </div>
+        <p class="footer-legal">© 2026 CEIE Eventos. Todos los derechos reservados.</p>
+                <p class="footer-copy">Contacto: 79521088</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════ LOADER GLOBAL ═══════════════════════════ -->
+  <div class="global-loader" id="globalLoader">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <span class="loader-text">Procesando...</span>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

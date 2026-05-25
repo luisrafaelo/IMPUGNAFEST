@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Impugna Fest</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2 class="login-title">Panel de Staff</h2>
+      <p class="login-sub">Acceso restringido — solo personal autorizado</p>
+      <div class="login-field">
+        <input type="password" id="pinInput" placeholder="Contraseña de acceso" maxlength="20" />
+        <button onclick="checkLogin()">Entrar</button>
+      </div>
+      <div class="login-error" id="loginError">Contraseña incorrecta</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardScreen" style="display:none">
+
+    <nav class="dash-nav">
+      <div class="dash-nav-inner">
+        <div class="nav-logo">
+          <img src="logo.png" alt="" class="logo-img" />
+          <span class="logo-text">IMPUGNA FEST</span>
+        </div>
+        <span class="dash-nav-tag">Panel Staff</span>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </nav>
+
+    <main class="dash-main">
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">🎫</div>
+          <div class="kpi-data">
+            <span class="kpi-value" data-target="187">0</span>
+            <span class="kpi-label">Entradas Vendidas</span>
+          </div>
+          <div class="kpi-trend kpi-trend--up">+12% hoy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">🎟️</div>
+          <div class="kpi-data">
+            <span class="kpi-value" data-target="313">0</span>
+            <span class="kpi-label">Disponibles</span>
+          </div>
+          <div class="kpi-trend kpi-trend--neutral">500 total</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-data">
+            <span class="kpi-prefix">Bs. </span>
+            <span class="kpi-value" data-target="2480">0</span>
+            <span class="kpi-label">Ingresos Estimados</span>
+          </div>
+          <div class="kpi-trend kpi-trend--up">+8% vs ayer</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-data">
+            <span class="kpi-value" data-target="94">0</span>
+            <span class="kpi-suffix">%</span>
+            <span class="kpi-label">Tasa de Validación</span>
+          </div>
+          <div class="kpi-trend kpi-trend--up">Alta</div>
+        </div>
+      </div>
+
+      <!-- Mid -->
+      <div class="dashboard-mid">
+        <div class="dash-card">
+          <h3 class="dash-card-title"><span>🏆</span> Top Vendedores</h3>
+          <div class="staff-ranking">
+            <div class="staff-item staff-item--1">
+              <div class="staff-rank">1</div>
+              <div class="staff-info">
+                <span class="staff-name">Carlos Mendoza</span>
+                <span class="staff-code">STAFF-001</span>
+              </div>
+              <div class="staff-sales">
+                <div class="staff-bar-wrap"><div class="staff-bar" style="width:100%"></div></div>
+                <span class="staff-count">58 ventas</span>
+              </div>
+            </div>
+            <div class="staff-item staff-item--2">
+              <div class="staff-rank">2</div>
+              <div class="staff-info">
+                <span class="staff-name">Valentina Ríos</span>
+                <span class="staff-code">STAFF-002</span>
+              </div>
+              <div class="staff-sales">
+                <div class="staff-bar-wrap"><div class="staff-bar" style="width:76%"></div></div>
+                <span class="staff-count">44 ventas</span>
+              </div>
+            </div>
+            <div class="staff-item staff-item--3">
+              <div class="staff-rank">3</div>
+              <div class="staff-info">
+                <span class="staff-name">Diego Paredes</span>
+                <span class="staff-code">STAFF-003</span>
+              </div>
+              <div class="staff-sales">
+                <div class="staff-bar-wrap"><div class="staff-bar" style="width:55%"></div></div>
+                <span class="staff-count">32 ventas</span>
+              </div>
+            </div>
+            <div class="staff-item">
+              <div class="staff-rank">4</div>
+              <div class="staff-info">
+                <span class="staff-name">Ana Quiroga</span>
+                <span class="staff-code">STAFF-004</span>
+              </div>
+              <div class="staff-sales">
+                <div class="staff-bar-wrap"><div class="staff-bar" style="width:36%"></div></div>
+                <span class="staff-count">21 ventas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <h3 class="dash-card-title"><span>📊</span> Distribución</h3>
+          <div class="dist-chart">
+            <div class="dist-item">
+              <div class="dist-bar-wrap">
+                <div class="dist-bar dist-bar--preventa" style="height:70%"><span class="dist-count">98</span></div>
+              </div>
+              <span class="dist-label">Preventa</span>
+              <span class="dist-pct">52%</span>
+            </div>
+            <div class="dist-item">
+              <div class="dist-bar-wrap">
+                <div class="dist-bar dist-bar--general" style="height:46%"><span class="dist-count">62</span></div>
+              </div>
+              <span class="dist-label">General</span>
+              <span class="dist-pct">33%</span>
+            </div>
+            <div class="dist-item">
+              <div class="dist-bar-wrap">
+                <div class="dist-bar dist-bar--vip" style="height:20%"><span class="dist-count">27</span></div>
+              </div>
+              <span class="dist-label">VIP</span>
+              <span class="dist-pct">14%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="dash-card dash-card--table">
+        <div class="table-header">
+          <h3 class="dash-card-title"><span>📋</span> Registros Recientes</h3>
+          <div class="table-filters">
+            <select class="table-filter-select">
+              <option>Todos</option>
+              <option>Preventa</option>
+              <option>General</option>
+              <option>VIP</option>
+            </select>
+            <input type="search" class="table-search" placeholder="Buscar..." />
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Serial</th><th>Nombre</th><th>Tipo</th><th>Staff</th><th>Estado</th><th>Fecha</th><th>Acción</th>  </tr>
+            </thead>
+            <tbody id="recordsTableBody">
+              <tr>
+                <td><code>NX-2025-A8F21</code></td>
+                <td>María López</td>
+                <td><span class="badge-type badge-preventa">Preventa</span></td>
+                <td>STAFF-001</td>
+                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
+                <td>12 Jul 2025</td>
+              </tr>
+              <tr>
+                <td><code>NX-2025-B3K77</code></td>
+                <td>Juan Flores</td>
+                <td><span class="badge-type badge-general">General</span></td>
+                <td>STAFF-002</td>
+                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
+                <td>11 Jul 2025</td>
+              </tr>
+              <tr>
+                <td><code>NX-2025-C9P04</code></td>
+                <td>Laura Mamani</td>
+                <td><span class="badge-type badge-vip">VIP</span></td>
+                <td>—</td>
+                <td><span class="badge-status badge-pending">Pendiente</span></td>
+                <td>11 Jul 2025</td>
+              </tr>
+              <tr>
+                <td><code>NX-2025-D1R55</code></td>
+                <td>Pedro Quispe</td>
+                <td><span class="badge-type badge-preventa">Preventa</span></td>
+                <td>STAFF-003</td>
+                <td><span class="badge-status badge-confirmed">Confirmado</span></td>
+                <td>10 Jul 2025</td>
+              </tr>
+              <tr>
+                <td><code>NX-2025-E6T89</code></td>
+                <td>Sofía Castro</td>
+                <td><span class="badge-type badge-general">General</span></td>
+                <td>STAFF-001</td>
+                <td><span class="badge-status badge-invalid">Inválido</span></td>
+                <td>10 Jul 2025</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
