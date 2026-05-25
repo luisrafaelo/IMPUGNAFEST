@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzExHMkyL0yuptcTkvhH_ooZC9hp1tvmDPsXlokewchLlcK_p4J5PtTI2jHpwG5xj7f/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2u-FKU6rKHgpCL-emDcsAISBHfPc9mLbpQaHbIeWMUrHriOBuOOCgsL8l-8lWqWZi/exec'; 
 
 const PASS            = 'CEIE-BYTE-2026';
 
