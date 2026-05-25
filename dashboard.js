@@ -1,7 +1,7 @@
 'use strict';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws3Z87M6e9HkJQ4jAHd80dpClqc8JUypABHooJqDCGnAbS2Rtkm7CAkOz1rodBCYkX/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytYLIyoXGSt1zsXK-l2keFldjv05plIDVbzkn50cNYWFi2diTwziEQ8o3bLTCjdH7l/exec';
 const PASS = 'CEIE-BYTE-2026';
-const TOTAL_ENTRADAS = 750;
+const TOTAL_ENTRADAS = 700;
 
 const STAFF_NOMBRES = {
   'STAFF-JAN': 'Jandrito',
@@ -86,12 +86,14 @@ function cargarTodo() {
         const isPending  = r.estado === 'PENDIENTE';
         const badgeClass = isPending ? 'badge-pending' : 'badge-confirmed';
         const badgeText  = isPending ? 'Pendiente' : 'Confirmado';
-        const tipoClass  = r.tipo === 'Preventa' ? 'badge-preventa'
-                         : r.tipo === 'VIP'      ? 'badge-vip'
-                         : r.tipo === 'Preferencial' ? 'badge-preferencial'
-                         : 'badge-general';
-        const accionBtn  = isPending
-          ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}','${r.telefono}','${r.nombre}','${r.tipo}',this)">Aprobar</button>`
+        const tipoClass = r.tipo === 'Preventa'     ? 'badge-preventa'
+                        : r.tipo === 'Promo'        ? 'badge-preventa'
+                        : r.tipo === 'VIP'          ? 'badge-vip'
+                        : r.tipo === 'Preferencial' ? 'badge-preferencial'
+                        : 'badge-general';
+        const accionBtn = isPending
+          ? `<button class="btn-aprobar" onclick="aprobarEntrada('${r.serial}','${r.telefono}','${r.nombre}','${r.tipo}',this)">Aprobar</button>
+            <button class="btn-rechazar" onclick="rechazarEntrada('${r.serial}',this)" style="margin-left:6px">Rechazar</button>`
           : '—';
         return `<tr>
           <td><code>${r.serial}</code></td>
@@ -173,14 +175,16 @@ function renderStaff(staff) {
 
 function renderDist(dist) {
   if (!dist) return;
-  const total = dist.preventa + dist.general + dist.vip || 1;
-  const max   = Math.max(dist.preventa, dist.general, dist.vip, 1);
+  const total = (dist.preventa || 0) + (dist.promo || 0) + (dist.general || 0) + (dist.preferencial || 0) + (dist.vip || 0) || 1;
+  const max   = Math.max(dist.preventa || 0, dist.promo || 0, dist.general || 0, dist.preferencial || 0, dist.vip || 0, 1);
+
   [
-  { id: 'dist-preventa',    count: dist.preventa    },
-  { id: 'dist-general',     count: dist.general     },
-  { id: 'dist-preferencial',count: dist.preferencial },
-  { id: 'dist-vip',         count: dist.vip         },
-].forEach(item => {
+    { id: 'dist-preventa',    count: dist.preventa    || 0 },
+    { id: 'dist-promo',       count: dist.promo       || 0 },
+    { id: 'dist-general',     count: dist.general     || 0 },
+    { id: 'dist-preferencial',count: dist.preferencial || 0 },
+    { id: 'dist-vip',         count: dist.vip         || 0 },
+  ].forEach(item => {
     const wrap = document.getElementById(item.id);
     if (!wrap) return;
     wrap.querySelector('.dist-bar').style.height  = Math.round(item.count / max * 100) + '%';
@@ -366,4 +370,31 @@ async function registrarInvitado(e) {
     submitBtn.disabled    = false;
     submitBtn.textContent = 'Registrar Invitado';
   }
+}
+function rechazarEntrada(serial, btn) {
+  if (!confirm(`¿Rechazar y liberar la entrada ${serial}? Esto la dejará disponible nuevamente.`)) return;
+  btn.disabled = true;
+  const siblingAprobar = btn.previousElementSibling;
+  if (siblingAprobar) siblingAprobar.disabled = true;
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'rechazarEntrada', serial })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      cargarTodo();
+    } else {
+      alert(data.msg);
+      btn.disabled = false;
+      if (siblingAprobar) siblingAprobar.disabled = false;
+    }
+  })
+  .catch(() => {
+    alert('Error de conexión');
+    btn.disabled = false;
+    if (siblingAprobar) siblingAprobar.disabled = false;
+  });
 }

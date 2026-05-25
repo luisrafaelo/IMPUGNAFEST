@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws3Z87M6e9HkJQ4jAHd80dpClqc8JUypABHooJqDCGnAbS2Rtkm7CAkOz1rodBCYkX/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytYLIyoXGSt1zsXK-l2keFldjv05plIDVbzkn50cNYWFi2diTwziEQ8o3bLTCjdH7l/exec';
 /* ─── ESTADO GLOBAL ─── */
 const STATE = {
   selectedTicketType: null,
@@ -113,6 +113,14 @@ function switchTab(tab) {
   document.querySelectorAll('.reg-panel').forEach(p => {
     p.classList.toggle('active', p.id === `panel-${tab}`);
   });
+
+  // Al activar el panel online, asegurar que el step actual esté visible
+  if (tab === 'online') {
+    document.querySelectorAll('.online-step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.getElementById(`step-${STATE.currentStep}`);
+    if (stepEl) stepEl.classList.add('active');
+    updateStepIndicators(STATE.currentStep);
+  }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -198,17 +206,23 @@ function selectOnlineTicketByType(type) {
 }
 
 function updateOnlineSummary() {
-  const summary = document.getElementById('ticketSummary');
-  const payment = document.getElementById('paymentAmount');
-  const pType   = document.getElementById('paymentType');
-
   if (!STATE.selectedTicketType) return;
-
-  const label = STATE.selectedTicketType === 'preventa' ? 'Preventa — 10 Bs.' : 'General — 15 Bs.';
+  const isPromo = STATE.selectedTicketType === 'preventa';
+  const label   = isPromo ? 'Promo 2x25 — 25 Bs.' : 'General — 15 Bs.';
   document.getElementById('summaryText').textContent = `Tipo seleccionado: ${label}`;
 
+  const payment = document.getElementById('paymentAmount');
+  const pType   = document.getElementById('paymentType');
   if (payment) payment.textContent = `${STATE.selectedTicketPrice} Bs.`;
-  if (pType)   pType.textContent   = STATE.selectedTicketType === 'preventa' ? 'Preventa' : 'General';
+  if (pType)   pType.textContent   = isPromo ? 'Promo 2x25' : 'General';
+
+  // Mostrar/ocultar campos persona 2
+  const row2 = document.getElementById('rowPersona2');
+  if (row2) {
+    row2.style.display = isPromo ? '' : 'none';
+    document.getElementById('onlineName2').required  = isPromo;
+    document.getElementById('onlinePhone2').required = isPromo;
+  }
 }
 
 function goToStep(step) {
@@ -219,15 +233,23 @@ function goToStep(step) {
   }
 
   /* Validar paso 2 */
-  if (step === 3) {
+if (step === 3) {
     const name  = document.getElementById('onlineName').value.trim();
     const phone = document.getElementById('onlinePhone').value.trim();
+    const isPromo = STATE.selectedTicketType === 'preventa';
 
     if (!name || !phone) {
       showToast('error', '⚠️ Completa todos los campos.', 3000);
       return;
     }
-
+    if (isPromo) {
+      const name2  = document.getElementById('onlineName2').value.trim();
+      const phone2 = document.getElementById('onlinePhone2').value.trim();
+      if (!name2 || !phone2) {
+        showToast('error', '⚠️ Completa los datos de la persona 2.', 3000);
+        return;
+      }
+    }
     updateOnlineSummary();
     document.getElementById('paymentAmount').textContent = `${STATE.selectedTicketPrice} Bs.`;
   }
@@ -259,24 +281,29 @@ function updateStepIndicators(activeStep) {
 
 async function processOnlinePayment() {
   const file = document.getElementById('onlineFile').files[0];
-
   if (!file) {
     showToast('error', '📎 Debes subir el comprobante de pago.', 3000);
     return;
   }
 
   showLoader(true);
-
-  const b64 = await fileToBase64(file);
+  const b64      = await fileToBase64(file);
+  const isPromo  = STATE.selectedTicketType === 'preventa';
+  const nombre1  = document.getElementById('onlineName').value.trim();
+  const telefono1= document.getElementById('onlinePhone').value.trim();
+  const nombre2  = isPromo ? document.getElementById('onlineName2').value.trim()  : '';
+  const telefono2= isPromo ? document.getElementById('onlinePhone2').value.trim() : '';
 
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
+    const res  = await fetch(APPS_SCRIPT_URL, {
       method:  'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action:         'compraOnline',
-        nombre:         document.getElementById('onlineName').value.trim(),
-        telefono:       document.getElementById('onlinePhone').value.trim(),
+        nombre:         nombre1,
+        telefono:       telefono1,
+        nombre2,
+        telefono2,
         tipo:           STATE.selectedTicketType,
         comprobanteB64: b64.split(',')[1],
         fileName:       file.name
@@ -291,24 +318,45 @@ async function processOnlinePayment() {
       return;
     }
 
-    // Mostrar entrada generada
-    document.getElementById('tgName').textContent   = document.getElementById('onlineName').value.trim();
+    // Ticket 1
+    document.getElementById('tgName').textContent   = nombre1;
     document.getElementById('tgType').textContent   = data.tipo;
     document.getElementById('tgSerial').textContent = data.serial;
     document.getElementById('tgToken').textContent  = data.token;
-    // Generar QR visual en el ticket
-    const qrData = `${data.serial}|${data.token}`;
-    const qrURL  = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrData)}`;
-    document.querySelectorAll('.qr-mock--small').forEach(el => {
-    el.style.display = 'none';
-    el.insertAdjacentHTML('afterend', `<img src="${qrURL}" style="width:100px;border-radius:8px;" />`);
-    });
+
+    const qr1 = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(data.serial + '|' + data.token)}`;
+    const area1 = document.getElementById('qrArea1');
+    const mockEl1 = area1.querySelector('.qr-mock--small');
+    if (mockEl1) mockEl1.style.display = 'none';
+    const oldImg1 = area1.querySelector('img');
+    if (oldImg1) oldImg1.remove();
+    area1.insertAdjacentHTML('beforeend', `<img src="${qr1}" style="width:100px;border-radius:8px;" />`);
+
+    // Ticket 2 (solo promo)
+    const ticket2 = document.getElementById('tgTicket2');
+    if (isPromo && data.serial2) {
+      ticket2.style.display = '';
+      document.getElementById('tgName2').textContent   = nombre2;
+      document.getElementById('tgType2').textContent   = data.tipo;
+      document.getElementById('tgSerial2').textContent = data.serial2;
+      document.getElementById('tgToken2').textContent  = data.token2;
+
+      const qr2 = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(data.serial2 + '|' + data.token2)}`;
+      const area2 = document.getElementById('qrArea2');
+      const mockEl2 = area2.querySelector('.qr-mock--small');
+      if (mockEl2) mockEl2.style.display = 'none';
+      const oldImg2 = area2.querySelector('img');
+      if (oldImg2) oldImg2.remove();
+      area2.insertAdjacentHTML('beforeend', `<img src="${qr2}" style="width:100px;border-radius:8px;" />`);
+    } else {
+      ticket2.style.display = 'none';
+    }
 
     const warning = document.querySelector('.tg-warning p');
-if (warning) warning.textContent = '⏳ Tu entrada está PENDIENTE de aprobación. Recibirás confirmación pronto. Guarda tu serial y token.';
+    if (warning) warning.textContent = '⏳ Tu entrada está PENDIENTE de aprobación. Recibirás confirmación pronto. Guarda tu serial y token.';
 
-goToStep(4);
-showToast('info', '⏳ Compra recibida — pendiente de aprobación.', 6000);
+    goToStep(4);
+    showToast('info', '⏳ Compra recibida — pendiente de aprobación.', 6000);
   } catch (err) {
     showLoader(false);
     showToast('error', '❌ Error de conexión. Intenta de nuevo.', 4000);
@@ -510,26 +558,33 @@ async function verificarEntrada() {
   }
 }
 function resetOnlineFlow() {
-  // Limpiar formulario
   document.getElementById('formOnline').reset();
   document.getElementById('onlineFile').value = '';
 
-  // Reset file upload UI
   const area = document.getElementById('onlineFileUpload');
   area.classList.remove('has-file');
   area.querySelector('.file-upload-icon').textContent = '📎';
   area.querySelector('.file-upload-text').textContent = 'Subir comprobante';
   area.querySelector('.file-upload-hint').textContent = 'PNG, JPG, PDF · Max 5MB';
 
-  // Reset selección de ticket
   document.querySelectorAll('.online-ticket').forEach(t => t.classList.remove('selected'));
   STATE.selectedTicketType  = null;
   STATE.selectedTicketPrice = null;
 
-  // Reset QR generado
-  document.querySelectorAll('.qr-mock--small').forEach(el => {
-    el.style.display = '';
-    const img = el.nextElementSibling;
-    if (img && img.tagName === 'IMG') img.remove();
-  });
+  // Reset QR ticket 1
+  const area1 = document.getElementById('qrArea1');
+  const mock1 = area1.querySelector('.qr-mock--small');
+  if (mock1) mock1.style.display = '';
+  const img1 = area1.querySelector('img');
+  if (img1) img1.remove();
+
+  // Reset QR ticket 2
+  const area2 = document.getElementById('qrArea2');
+  const mock2 = area2.querySelector('.qr-mock--small');
+  if (mock2) mock2.style.display = '';
+  const img2 = area2.querySelector('img');
+  if (img2) img2.remove();
+
+  document.getElementById('tgTicket2').style.display = 'none';
+  document.getElementById('rowPersona2').style.display = 'none';
 }

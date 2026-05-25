@@ -133,36 +133,36 @@
 
       <div class="tickets-grid">
 
-        <!-- PREVENTA -->
-        <div class="ticket-card ticket-card--preventa" data-type="preventa">
-          <div class="ticket-glow"></div>
-          <div class="ticket-header">
-            <span class="ticket-badge">🔥 PREVENTA</span>
-            <div class="ticket-price">
-              <span class="price-amount">10</span>
-              <span class="price-currency">Bs.</span>
-            </div>
-          </div>
-          <div class="ticket-perforations"></div>
-          <div class="ticket-body">
-            <h3 class="ticket-name">Acceso General</h3>
-            <p class="ticket-desc">Precio especial de lanzamiento. Oferta por tiempo limitado.</p>
-            <ul class="ticket-features">
-              <li><span class="feat-icon">✓</span> Acceso al recinto</li>
-              <li><span class="feat-icon">✓</span> Zona general</li>
-              <li><span class="feat-icon">✓</span> Shows en vivo</li>
-              <li><span class="feat-icon">✓</span> Acceso a guardarropía</li>
-              <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
-            </ul>
-            <div class="ticket-availability">
-              <div class="availability-bar">
-                <div class="availability-fill" style="width: 90%"></div>
-              </div>
-              <span class="availability-text">10% disponible</span>
-            </div>
-          </div>
-          <button class="ticket-btn" onclick="selectTicket('preventa', 10)">Seleccionar</button>
-        </div>
+        <!-- PROMO -->
+<div class="ticket-card ticket-card--preventa" data-type="preventa">
+  <div class="ticket-glow"></div>
+  <div class="ticket-header">
+    <span class="ticket-badge">🔥 PROMO</span>
+    <div class="ticket-price">
+      <span class="price-amount">25</span>
+      <span class="price-currency">Bs.</span>
+    </div>
+  </div>
+  <div class="ticket-perforations"></div>
+  <div class="ticket-body">
+    <h3 class="ticket-name">2 x 25 — Dúo</h3>
+    <p class="ticket-desc">Promo especial: dos entradas por el precio de dos preventa. Se generan 2 seriales.</p>
+    <ul class="ticket-features">
+      <li><span class="feat-icon">✓</span> 2 accesos al recinto</li>
+      <li><span class="feat-icon">✓</span> Zona general</li>
+      <li><span class="feat-icon">✓</span> Shows en vivo</li>
+      <li><span class="feat-icon">✓</span> Acceso a guardarropía</li>
+      <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
+    </ul>
+    <div class="ticket-availability">
+      <div class="availability-bar">
+        <div class="availability-fill" style="width: 90%"></div>
+      </div>
+      <span class="availability-text">10% disponible</span>
+    </div>
+  </div>
+  <button class="ticket-btn" onclick="selectTicket('preventa', 25)">Seleccionar</button>
+</div>
 
         <!-- GENERAL -->
         <div class="ticket-card ticket-card--general" data-type="general">
@@ -377,12 +377,12 @@
 
             <h4 class="step-title">Selecciona tipo de entrada</h4>
             <div class="online-ticket-selector">
-              <div class="online-ticket" data-type="preventa" data-price="10" onclick="selectOnlineTicket(this)">
+              <div class="online-ticket" data-type="preventa" data-price="25" onclick="selectOnlineTicket(this)">
                 <div class="ot-info">
-                  <span class="ot-badge">PREVENTA</span>
-                  <span class="ot-name">Acceso General</span>
+                  <span class="ot-badge">PROMO 2x25</span>
+                  <span class="ot-name">Dúo — 2 entradas</span>
                 </div>
-                <span class="ot-price">10 Bs.</span>
+                <span class="ot-price">25 Bs.</span>
                 <div class="ot-check">✓</div>
               </div>
               <div class="online-ticket" data-type="general" data-price="15" onclick="selectOnlineTicket(this)">
@@ -398,27 +398,34 @@
           </div>
 
           <!-- Paso 2: Datos personales -->
-          <div class="online-step" id="step-2">
-            <h4 class="step-title">Tus datos personales</h4>
-            <form class="reg-form" id="formOnline" onsubmit="goToStep(3); return false;">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="onlineName">Nombre completo <span class="req">*</span></label>
-                  <input type="text" id="onlineName" placeholder="Tu nombre completo" required />
-                </div>
-                <div class="form-group">
-                  <label for="onlinePhone">Teléfono <span class="req">*</span></label>
-                  <input type="tel" id="onlinePhone" placeholder="Ej: 70012345" required />
-                </div>
-              </div>
-              <div class="selected-ticket-summary" id="ticketSummary">
-                <span class="summary-icon">🎫</span>
-                <span id="summaryText">Selecciona un tipo de entrada primero</span>
-              </div>
-              <button type="submit" class="btn-primary">Continuar al Pago</button>
-            <button class="btn-back" onclick="goToStep(1)">← Atrás</button>
-            </form>
-          </div>
+<div class="online-step" id="step-2">
+  <h4 class="step-title">Tus datos personales</h4>
+  <form id="formOnline">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="onlineName">Nombre completo <span class="req">*</span></label>
+        <input type="text" id="onlineName" placeholder="Tu nombre completo" required />
+      </div>
+      <div class="form-group">
+        <label for="onlinePhone">Teléfono <span class="req">*</span></label>
+        <input type="tel" id="onlinePhone" placeholder="Ej: 70012345" required />
+      </div>
+    </div>
+    <div class="form-row" id="rowPersona2" style="display:none;">
+      <div class="form-group">
+        <label for="onlineName2">Nombre persona 2 <span class="req">*</span></label>
+        <input type="text" id="onlineName2" placeholder="Nombre completo" />
+      </div>
+      <div class="form-group">
+        <label for="onlinePhone2">Teléfono persona 2 <span class="req">*</span></label>
+        <input type="tel" id="onlinePhone2" placeholder="Ej: 70012345" />
+      </div>
+    </div>
+  </form>
+  <div class="form-group" id="summaryText" style="margin-top:8px;"></div>
+  <button class="btn-primary" onclick="goToStep(3)">Continuar</button>
+  <button class="btn-back" onclick="goToStep(1)">← Atrás</button>
+</div>
 
           <!-- Paso 3: Pago -->
           <div class="online-step" id="step-3">
@@ -467,59 +474,101 @@
           </div>
 
           <!-- Paso 4: Entrada generada -->
-          <div class="online-step" id="step-4">
-            <div class="ticket-generated">
-              <div class="tg-header">
-                <div class="tg-check-icon">✓</div>
-                <h4>¡Entrada Confirmada!</h4>
-                <p>Guarda tu serial y token. Los necesitarás para ingresar al evento.</p>
-              </div>
+<div class="online-step" id="step-4">
+  <div class="ticket-generated">
+    <div class="tg-header">
+      <div class="tg-check-icon">✓</div>
+      <h4>¡Entradas Confirmadas!</h4>
+      <p>Guarda los seriales y tokens. Los necesitarán para ingresar al evento.</p>
+    </div>
 
-              <div class="tg-ticket">
-                <div class="tg-ticket-top">
-                  <div class="tg-event">IMPUGNA FEST 2026</div>
-                  <div class="tg-date">29 MAYO · Salón Fabril</div>
-                </div>
-                <div class="tg-perforations"></div>
-                <div class="tg-ticket-bottom">
-                  <div class="tg-fields">
-                    <div class="tg-field">
-                      <span class="tg-field-label">TITULAR</span>
-                      <span class="tg-field-value" id="tgName">—</span>
-                    </div>
-                    <div class="tg-field">
-                      <span class="tg-field-label">TIPO</span>
-                      <span class="tg-field-value" id="tgType">—</span>
-                    </div>
-                    <div class="tg-field tg-field--serial">
-                      <span class="tg-field-label">SERIAL</span>
-                      <span class="tg-field-value tg-serial" id="tgSerial">—</span>
-                    </div>
-                    <div class="tg-field tg-field--token">
-                      <span class="tg-field-label">TOKEN SECRETO</span>
-                      <span class="tg-field-value tg-token" id="tgToken">—</span>
-                    </div>
-                  </div>
-                  <div class="tg-qr-area">
-                    <div class="qr-placeholder qr-placeholder--small">
-                      <div class="qr-mock qr-mock--small">
-                        <div class="qr-corner qr-corner--tl"></div>
-                        <div class="qr-corner qr-corner--tr"></div>
-                        <div class="qr-corner qr-corner--bl"></div>
-                        <div class="qr-inner-grid"></div>
-                      </div>
-                    </div>
-                    <p class="tg-qr-label">QR de Acceso</p>
-                  </div>
-                </div>
-              </div>
-<button class="btn-back" onclick="goToStep(1); resetOnlineFlow()">← Nueva compra</button>
-              <div class="tg-warning">
-                <span>⚠️</span>
-                <p>Guarda una captura de pantalla. Este es tu único comprobante digital.</p>
-              </div>
+    <!-- Ticket persona 1 -->
+    <div class="tg-ticket" id="tgTicket1">
+      <div class="tg-ticket-top">
+        <div class="tg-event">IMPUGNA FEST 2026</div>
+        <div class="tg-date">29 MAYO · Salón Fabril · PERSONA 1</div>
+      </div>
+      <div class="tg-perforations"></div>
+      <div class="tg-ticket-bottom">
+        <div class="tg-fields">
+          <div class="tg-field">
+            <span class="tg-field-label">TITULAR</span>
+            <span class="tg-field-value" id="tgName">—</span>
+          </div>
+          <div class="tg-field">
+            <span class="tg-field-label">TIPO</span>
+            <span class="tg-field-value" id="tgType">—</span>
+          </div>
+          <div class="tg-field tg-field--serial">
+            <span class="tg-field-label">SERIAL</span>
+            <span class="tg-field-value tg-serial" id="tgSerial">—</span>
+          </div>
+          <div class="tg-field tg-field--token">
+            <span class="tg-field-label">TOKEN SECRETO</span>
+            <span class="tg-field-value tg-token" id="tgToken">—</span>
+          </div>
+        </div>
+        <div class="tg-qr-area">
+          <div class="qr-placeholder qr-placeholder--small" id="qrArea1">
+            <div class="qr-mock qr-mock--small">
+              <div class="qr-corner qr-corner--tl"></div>
+              <div class="qr-corner qr-corner--tr"></div>
+              <div class="qr-corner qr-corner--bl"></div>
+              <div class="qr-inner-grid"></div>
             </div>
           </div>
+          <p class="tg-qr-label">QR de Acceso</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket persona 2 (solo promo) -->
+    <div class="tg-ticket" id="tgTicket2" style="display:none;margin-top:16px;">
+      <div class="tg-ticket-top">
+        <div class="tg-event">IMPUGNA FEST 2026</div>
+        <div class="tg-date">29 MAYO · Salón Fabril · PERSONA 2</div>
+      </div>
+      <div class="tg-perforations"></div>
+      <div class="tg-ticket-bottom">
+        <div class="tg-fields">
+          <div class="tg-field">
+            <span class="tg-field-label">TITULAR</span>
+            <span class="tg-field-value" id="tgName2">—</span>
+          </div>
+          <div class="tg-field">
+            <span class="tg-field-label">TIPO</span>
+            <span class="tg-field-value" id="tgType2">—</span>
+          </div>
+          <div class="tg-field tg-field--serial">
+            <span class="tg-field-label">SERIAL</span>
+            <span class="tg-field-value tg-serial" id="tgSerial2">—</span>
+          </div>
+          <div class="tg-field tg-field--token">
+            <span class="tg-field-label">TOKEN SECRETO</span>
+            <span class="tg-field-value tg-token" id="tgToken2">—</span>
+          </div>
+        </div>
+        <div class="tg-qr-area">
+          <div class="qr-placeholder qr-placeholder--small" id="qrArea2">
+            <div class="qr-mock qr-mock--small">
+              <div class="qr-corner qr-corner--tl"></div>
+              <div class="qr-corner qr-corner--tr"></div>
+              <div class="qr-corner qr-corner--bl"></div>
+              <div class="qr-inner-grid"></div>
+            </div>
+          </div>
+          <p class="tg-qr-label">QR de Acceso</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-back" onclick="goToStep(1); resetOnlineFlow()">← Nueva compra</button>
+    <div class="tg-warning">
+      <span>⚠️</span>
+      <p>Guarda una captura de pantalla. Este es tu único comprobante digital.</p>
+    </div>
+  </div>
+</div>
 
         </div>
       </div>

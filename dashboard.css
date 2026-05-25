@@ -460,3 +460,22 @@ body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-te
 }
 
 .inv-tipo-opt:hover { border-color: rgba(168,85,247,0.4); }
+.btn-rechazar {
+  background: transparent;
+  border: 1px solid rgba(255,45,120,0.4);
+  color: var(--c-magenta);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+.btn-rechazar:hover { background: rgba(255,45,120,0.1); }
+.btn-rechazar:disabled { opacity: 0.4; cursor: not-allowed; }
+.dist-bar--promo {
+  background: linear-gradient(180deg, #00dcff, rgba(0,220,255,0.3));
+}
