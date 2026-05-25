@@ -42,6 +42,9 @@
 
   --nav-h:        72px;
   --transition:   0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ── INNER CIRCLE ── */
+--c-purple:      #a855f7;
+--c-purple-glow: rgba(168, 85, 247, 0.2);
 }
 /* Logo imagen */
 .logo-img {
@@ -1579,4 +1582,36 @@ body {
 .btn-back:hover {
   border-color: var(--c-cyan);
   color: var(--c-cyan);
+}
+.ticket-card--inner { border-color: rgba(168, 85, 247, 0.2); }
+
+.ticket-card--inner .ticket-glow {
+  background: linear-gradient(90deg, transparent, #a855f7, transparent);
+}
+
+.ticket-card--inner:hover {
+  box-shadow: 0 20px 60px rgba(168, 85, 247, 0.15);
+}
+
+.ticket-ribbon--inner {
+  background: #a855f7;
+  color: #fff;
+}
+
+.feat-icon--inner { color: #a855f7; }
+
+.availability-fill--inner {
+  background: linear-gradient(90deg, #a855f7, #7c3aed);
+}
+
+.ticket-btn--inner {
+  border-color: rgba(168, 85, 247, 0.3);
+  color: #a855f7;
+}
+
+.ticket-btn--inner:hover {
+  background: #a855f7 !important;
+  border-color: #a855f7 !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3) !important;
 }

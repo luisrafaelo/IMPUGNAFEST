@@ -88,7 +88,10 @@ function selectTicket(type, price) {
   document.querySelectorAll('.ticket-card').forEach(card => {
     card.classList.toggle('ticket-card--selected', card.dataset.type === type);
   });
-
+if (type === 'inner') {
+  showToast('info', '🔮 Inner Circle — solo por invitación personal.', 4000);
+  return;
+}
   if (type === 'vip') {
     showToast('info', '👑 Las entradas VIP son solo por invitación directa.', 4000);
     return;
