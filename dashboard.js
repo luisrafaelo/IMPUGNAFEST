@@ -1,5 +1,5 @@
 'use strict';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdR5E9TIANHAFcZnvX18DNe9cLiJu7T1GFhx39xxG6QZ0hgDgiFMoovqy_eqjwm0lb/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvBu76A7KeKKj3dsKoDr75TFIxCvFdt9T5pGc4aydxBnwSWUZu6_IBh2yGvAEm_6j3/exec';
 const PASS = 'CEIE-BYTE-2026';
 const TOTAL_ENTRADAS = 700;
 
@@ -261,19 +261,24 @@ async function registrarStaffDash(e) {
   const serial    = document.getElementById('sdSerial').value.trim().toUpperCase();
   const nombre    = document.getElementById('sdNombre').value.trim();
   const telefono  = document.getElementById('sdTelefono').value.trim();
-  const staffCode = document.getElementById('sdStaff').value.trim().toUpperCase();
+  const staffCode   = document.getElementById('sdStaff').value.trim().toUpperCase();
+  const tipoEntrada = document.getElementById('sdTipo').value;
   const res       = document.getElementById('staffDashResult');
   res.style.display = 'none';
+  const submitBtn = document.querySelector('#formStaffDash button[type="submit"]');
+submitBtn.disabled    = true;
+submitBtn.textContent = 'Validando...';
 
   try {
     const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'validarStaff',
-        nombre, telefono, serial, staffCode,
-        comprobanteB64: '', fileName: 'dash-manual'
-      })
+body: JSON.stringify({
+  action: 'validarStaff',
+  nombre, telefono, serial, staffCode,
+  tipoEntrada,
+  comprobanteB64: '', fileName: 'dash-manual'
+})
     });
     const data = await r.json();
     res.style.display = 'flex';
