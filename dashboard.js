@@ -1,5 +1,5 @@
 'use strict';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvBu76A7KeKKj3dsKoDr75TFIxCvFdt9T5pGc4aydxBnwSWUZu6_IBh2yGvAEm_6j3/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-2X6XdfW4ExNLt9v2pmB-f-N6xBQMe6ctGiT0SK7JRVnutS2J2Pl5kVrciZp6OuPR/exec';
 const PASS = 'CEIE-BYTE-2026';
 const TOTAL_ENTRADAS = 700;
 
@@ -22,7 +22,14 @@ const STAFF_NOMBRES = {
   'STAFF-RAF': 'Rafael',
   'ONLINE':    'Online',
 };
+const STATE_DASH = { ticket: null };
 
+function imprimirTicketStaff() {
+  const t = STATE_DASH.ticket;
+  if (!t) return;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(t.serial + '|' + t.token)}`;
+  descargarTicketPDF(t.nombre, t.serial, t.token, qrUrl, t.tipo, 'ENTRADA FÍSICA');
+}
 /* ── LOGIN ── */
 function checkLogin() {
   const val = document.getElementById('pinInput').value;
@@ -254,6 +261,8 @@ function cerrarModalStaff() {
   const btn = document.querySelector('#formStaffDash button[type="submit"]');
   btn.disabled    = false;
   btn.textContent = 'Validar y Registrar';
+  document.getElementById('btnImprimirStaff').style.display = 'none';
+STATE_DASH.ticket = null;
 }
 
 async function registrarStaffDash(e) {
@@ -284,7 +293,13 @@ body: JSON.stringify({
     res.style.display = 'flex';
     res.className     = `staffdash-result ${data.ok ? 'success' : data.code === 'PENDING' ? 'warning' : 'error'}`;
     res.textContent   = data.msg;
-    if (data.ok) { cargarTodo(); setTimeout(cerrarModalStaff, 2000); }
+    if (data.ok) {
+  cargarTodo();
+  // Generar ticket visual
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(serial + '|' + (data.token || ''))}`;
+  descargarTicketPDF(nombre, serial, data.token || '—', qrUrl, data.tipo || tipoEntrada, 'ENTRADA FÍSICA');
+  setTimeout(cerrarModalStaff, 2500);
+}
   } catch {
     res.style.display = 'flex';
     res.className     = 'staffdash-result error';
@@ -361,9 +376,10 @@ async function registrarInvitado(e) {
       : `❌ ${data.msg}`;
 
     if (data.ok) {
-      cargarTodo();
-      setTimeout(cerrarModalInvitado, 3000);
-    } else {
+  cargarTodo();
+  STATE_DASH.ticket = { nombre, serial, token: data.token || '—', tipo: data.tipo || tipoEntrada };
+  document.getElementById('btnImprimirStaff').style.display = 'block';
+}else {
       // Reactivar si hay error
       submitBtn.disabled    = false;
       submitBtn.textContent = 'Registrar Invitado';
@@ -402,4 +418,113 @@ function rechazarEntrada(serial, btn) {
     btn.disabled = false;
     if (siblingAprobar) siblingAprobar.disabled = false;
   });
+}
+function descargarTicketPDF(nombre, serial, token, qrUrl, tipo, persona) {
+  const w = 400, h = 220;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo oscuro
+  ctx.fillStyle = '#0d1526';
+  ctx.fillRect(0, 0, w, h);
+
+  // Borde naranja
+  ctx.strokeStyle = '#ff6a00';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(4, 4, w - 8, h - 8);
+
+  // Línea perforada vertical
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(255,106,0,0.4)';
+  ctx.beginPath();
+  ctx.moveTo(w - 130, 4);
+  ctx.lineTo(w - 130, h - 4);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Semicírculos perforados
+  ctx.fillStyle = '#050810';
+  ctx.beginPath(); ctx.arc(w - 130, 0,   10, 0, Math.PI); ctx.fill();
+  ctx.beginPath(); ctx.arc(w - 130, h,   10, Math.PI, 0); ctx.fill();
+
+  // Título evento
+  ctx.fillStyle = '#ff6a00';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('IMPUGNA FEST 2026', 16, 28);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '9px monospace';
+  ctx.fillText('29 MAYO · SALÓN FABRIL · LA PAZ', 16, 42);
+
+  // Separador
+  ctx.strokeStyle = 'rgba(255,106,0,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(16, 50); ctx.lineTo(w - 140, 50); ctx.stroke();
+
+  // Nombre
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TITULAR', 16, 66);
+  ctx.fillStyle = '#f5ede8';
+  ctx.font = 'bold 12px monospace';
+  ctx.fillText(nombre.toUpperCase().substring(0, 22), 16, 80);
+
+  // Tipo
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TIPO', 16, 100);
+  ctx.fillStyle = '#ff6a00';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText(tipo.toUpperCase(), 16, 114);
+
+  // Serial
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('SERIAL', 16, 134);
+  ctx.fillStyle = '#00dcff';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText(serial, 16, 148);
+
+  // Token
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px monospace';
+  ctx.fillText('TOKEN SECRETO', 16, 168);
+  ctx.fillStyle = '#ffd700';
+  ctx.font = 'bold 13px monospace';
+  ctx.fillText(token, 16, 184);
+
+  // Persona label
+  ctx.fillStyle = 'rgba(255,106,0,0.6)';
+  ctx.font = '8px monospace';
+  ctx.fillText(persona, 16, 208);
+
+  // QR
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    ctx.drawImage(img, w - 122, 14, 108, 108);
+
+    // Label QR
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '8px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('QR DE ACCESO', w - 68, 136);
+    ctx.fillText('NO COMPARTIR', w - 68, 147);
+    ctx.textAlign = 'left';
+
+    // Descargar
+    const link = document.createElement('a');
+    link.download = `ticket-${serial}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+  img.onerror = () => {
+    // Si falla el QR, descarga sin él
+    const link = document.createElement('a');
+    link.download = `ticket-${serial}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+  img.src = qrUrl || `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(serial + '|' + token)}`;
 }

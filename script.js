@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvBu76A7KeKKj3dsKoDr75TFIxCvFdt9T5pGc4aydxBnwSWUZu6_IBh2yGvAEm_6j3/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-2X6XdfW4ExNLt9v2pmB-f-N6xBQMe6ctGiT0SK7JRVnutS2J2Pl5kVrciZp6OuPR/exec';
 /* ─── ESTADO GLOBAL ─── */
 const STATE = {
   selectedTicketType: null,
@@ -9,6 +9,7 @@ const STATE = {
   uploadedFileStaff: null,
   uploadedFileOnline: null,
   staffType:           'promo',
+  lastTicket:          null,
 };
 
 /* ══════════════════════════════════════════════════════
@@ -129,7 +130,7 @@ function switchTab(tab) {
    ══════════════════════════════════════════════════════ */
 async function submitStaffForm(e) {
   e.preventDefault();
-
+document.getElementById('btnDescargarStaff').style.display = 'none';
   const nombre    = document.getElementById('staffName').value.trim();
   const telefono  = document.getElementById('staffPhone').value.trim();
   const serial    = document.getElementById('staffSerial').value.trim().toUpperCase();
@@ -168,11 +169,30 @@ async function submitStaffForm(e) {
     const data = await res.json();
     showLoader(false);
     const tipo = data.ok ? 'success' : (data.code === 'PENDING' ? 'warning' : 'error');
-    showValidationResult('staffResult', tipo, data.msg);
+showValidationResult('staffResult', tipo, data.msg);
+
+if (data.ok) {
+  STATE.lastTicket = { nombre, serial, token: data.token || '—', tipo: data.tipo || STATE.staffType };
+  document.getElementById('btnDescargarStaff').style.display = 'inline-flex';
+}
+
+// Limpiar campos siempre
+document.getElementById('formStaff').reset();
+const area = document.getElementById('staffFileUpload');
+area.classList.remove('has-file');
+area.querySelector('.file-upload-icon').textContent = '📎';
+area.querySelector('.file-upload-text').textContent = 'Subir comprobante QR';
+area.querySelector('.file-upload-hint').textContent = 'PNG, JPG, PDF · Max 5MB';
 
   } catch (err) {
     showLoader(false);
     showValidationResult('staffResult', 'error', '❌ Error de conexión. Intenta de nuevo.');
+    document.getElementById('formStaff').reset();
+const area = document.getElementById('staffFileUpload');
+area.classList.remove('has-file');
+area.querySelector('.file-upload-icon').textContent = '📎';
+area.querySelector('.file-upload-text').textContent = 'Subir comprobante QR';
+area.querySelector('.file-upload-hint').textContent = 'PNG, JPG, PDF · Max 5MB';
   }
 }
 
@@ -602,7 +622,8 @@ function selectStaffType(btn) {
   btn.classList.add('active');
   STATE.staffType = btn.dataset.stype;
   document.getElementById('staffTypeDesc').textContent = STAFF_TYPE_DESC[STATE.staffType];
-}function descargarTicketPDF(nombre, serial, token, qrUrl, tipo, persona) {
+}
+function descargarTicketPDF(nombre, serial, token, qrUrl, tipo, persona) {
   const w = 400, h = 220;
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
@@ -710,4 +731,10 @@ function selectStaffType(btn) {
     link.click();
   };
   img.src = qrUrl || `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(serial + '|' + token)}`;
+}
+function descargarDesdeStaff() {
+  const t = STATE.lastTicket;
+  if (!t) return;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=108x108&data=${encodeURIComponent(t.serial + '|' + t.token)}`;
+  descargarTicketPDF(t.nombre, t.serial, t.token, qrUrl, t.tipo, 'ENTRADA FÍSICA');
 }
