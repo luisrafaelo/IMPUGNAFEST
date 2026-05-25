@@ -1514,3 +1514,69 @@ body {
   .hero-actions { flex-direction: column; width: 100%; }
   .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
 }
+.nav-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  background: rgba(5, 8, 16, 0.97);
+  border-bottom: 1px solid var(--c-border);
+  backdrop-filter: blur(24px);
+  z-index: 999;
+  padding: 16px 24px 24px;
+  animation: fadeUp 0.25s ease both;
+}
+
+.nav-mobile-menu.open { display: flex; }
+
+.nav-mobile-menu a {
+  text-decoration: none;
+  color: var(--c-text-2);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--c-border);
+  transition: var(--transition);
+}
+
+.nav-mobile-menu a:hover { color: var(--c-cyan); }
+
+.nav-mobile-cta {
+  margin-top: 16px;
+  background: linear-gradient(135deg, var(--c-cyan), #0077ff);
+  border: none;
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.btn-back:hover {
+  border-color: var(--c-cyan);
+  color: var(--c-cyan);
+}

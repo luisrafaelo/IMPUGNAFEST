@@ -31,7 +31,12 @@
     </button>
   </div>
 </nav>
-
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="#entradas" onclick="closeMobileMenu()">Entradas</a>
+  <a href="#registro" onclick="closeMobileMenu()">Registro</a>
+  <a href="#verificar" onclick="closeMobileMenu()">Verificar</a>
+  <button class="nav-mobile-cta" onclick="closeMobileMenu(); scrollToSection('registro')">Obtener Entrada</button>
+</div>
   <!-- ═══════════════════════════════ HERO ════════════════════════════════ -->
   <section class="hero" id="hero">
     <div class="hero-bg">
@@ -144,6 +149,7 @@
               <li><span class="feat-icon">✓</span> Acceso al recinto</li>
               <li><span class="feat-icon">✓</span> Zona general</li>
               <li><span class="feat-icon">✓</span> Shows en vivo</li>
+              <li><span class="feat-icon">✓</span> Acceso a guardarropía</li>
               <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
             </ul>
             <div class="ticket-availability">
@@ -174,6 +180,7 @@
               <li><span class="feat-icon">✓</span> Acceso al recinto</li>
               <li><span class="feat-icon">✓</span> Zona general</li>
               <li><span class="feat-icon">✓</span> Shows en vivo</li>
+              <li><span class="feat-icon">✓</span> Acceso a guardarropía</li>
               <li><span class="feat-icon">✓</span> Acceso a mesa según llegada</li>
             </ul>
             <div class="ticket-availability">
@@ -203,7 +210,7 @@
             <ul class="ticket-features">
               <li><span class="feat-icon">✓</span> Zona VIP exclusiva</li>
               <li><span class="feat-icon">✓</span> Atención premier</li>
-              <li><span class="feat-icon">✓</span> Guardaroía Gratis</li>
+              <li><span class="feat-icon">✓</span> Guardarropía Gratis</li>
               <li><span class="feat-icon">✓</span> Cortesía de bienvenida</li>
               <li><span class="feat-icon">✓</span> Prioridad total</li>
             </ul>
@@ -394,6 +401,7 @@
                 <span id="summaryText">Selecciona un tipo de entrada primero</span>
               </div>
               <button type="submit" class="btn-primary">Continuar al Pago</button>
+            <button class="btn-back" onclick="goToStep(1)">← Atrás</button>
             </form>
           </div>
 
@@ -440,6 +448,7 @@
               </div>
             </div>
             <button class="btn-primary" onclick="processOnlinePayment()">Confirmar Pago y Obtener Entrada</button>
+            <button class="btn-back" onclick="goToStep(2)">← Atrás</button>
           </div>
 
           <!-- Paso 4: Entrada generada -->
@@ -489,7 +498,7 @@
                   </div>
                 </div>
               </div>
-
+<button class="btn-back" onclick="goToStep(1); resetOnlineFlow()">← Nueva compra</button>
               <div class="tg-warning">
                 <span>⚠️</span>
                 <p>Guarda una captura de pantalla. Este es tu único comprobante digital.</p>

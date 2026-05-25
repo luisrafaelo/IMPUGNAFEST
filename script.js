@@ -19,11 +19,23 @@ window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 20);
 }, { passive: true });
 
-/* Burger menu (mobile) */
 document.getElementById('navBurger').addEventListener('click', () => {
-  // Placeholder para menu mobile — se expandirá en FASE 2
-  showToast('info', '📱 Menú móvil — próximamente', 2000);
+  const menu   = document.getElementById('navMobileMenu');
+  const burger = document.getElementById('navBurger');
+  const isOpen = menu.classList.toggle('open');
+  burger.classList.toggle('active', isOpen);
 });
+
+function closeMobileMenu() {
+  document.getElementById('navMobileMenu').classList.remove('open');
+  document.getElementById('navBurger').classList.remove('active');
+}
+
+// Cerrar al hacer scroll
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+  closeMobileMenu();
+}, { passive: true });
 
 /* ══════════════════════════════════════════════════════
    COUNTDOWN
@@ -501,4 +513,28 @@ async function verificarEntrada() {
     showLoader(false);
     showValidationResult('verResult', 'error', '❌ Error de conexión.');
   }
+}
+function resetOnlineFlow() {
+  // Limpiar formulario
+  document.getElementById('formOnline').reset();
+  document.getElementById('onlineFile').value = '';
+
+  // Reset file upload UI
+  const area = document.getElementById('onlineFileUpload');
+  area.classList.remove('has-file');
+  area.querySelector('.file-upload-icon').textContent = '📎';
+  area.querySelector('.file-upload-text').textContent = 'Subir comprobante';
+  area.querySelector('.file-upload-hint').textContent = 'PNG, JPG, PDF · Max 5MB';
+
+  // Reset selección de ticket
+  document.querySelectorAll('.online-ticket').forEach(t => t.classList.remove('selected'));
+  STATE.selectedTicketType  = null;
+  STATE.selectedTicketPrice = null;
+
+  // Reset QR generado
+  document.querySelectorAll('.qr-mock--small').forEach(el => {
+    el.style.display = '';
+    const img = el.nextElementSibling;
+    if (img && img.tagName === 'IMG') img.remove();
+  });
 }
