@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   console.log('%c⬡ NEXUS EVENT — FASE 1 cargada correctamente', 'color: #00dcff; font-family: monospace; font-size: 14px;');
-  console.log('%c🔐 Serial de demo: NX-2025-DEMO01 | Token: ABC12345', 'color: #00ff88; font-family: monospace;');
+  console.log('%c🔐 Serial de demo: NX-2026-DEMO01 | Token: ABC12345', 'color: #00ff88; font-family: monospace;');
   console.log('%c📌 FASE 2: Conectar Google Apps Script', 'color: #888; font-family: monospace;');
 });
 async function verificarEntrada() {
